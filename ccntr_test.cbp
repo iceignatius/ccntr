@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ccntr_test" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/ccntr_test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="temp/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Linker>
+			<Add library="cmocka" />
+		</Linker>
+		<Unit filename="abort_message.h" />
+		<Unit filename="ccntr.h" />
+		<Unit filename="ccntr_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ccntr_list.h" />
+		<Unit filename="ccntr_list_template.h" />
+		<Unit filename="ccntr_man_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ccntr_man_list.h" />
+		<Unit filename="ccntr_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="container_of.h" />
+		<Unit filename="test_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test_list.h" />
+		<Unit filename="test_man_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test_man_list.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
