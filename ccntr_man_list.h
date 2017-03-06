@@ -25,14 +25,55 @@ typedef struct ccntr_man_list_iter_t
     ccntr_list_node_t       *node;
 } ccntr_man_list_iter_t;
 
+static inline
 void ccntr_man_list_iter_init(ccntr_man_list_iter_t   *self,
                               struct ccntr_man_list_t *container,
-                              ccntr_list_node_t       *node);
+                              ccntr_list_node_t       *node)
+{
+    self->container = container;
+    self->node      = node;
+}
 
-bool  ccntr_man_list_iter_have_value(const ccntr_man_list_iter_t *self);
-void* ccntr_man_list_iter_get_value (      ccntr_man_list_iter_t *self);
-void  ccntr_man_list_iter_move_prev (      ccntr_man_list_iter_t *self);
-void  ccntr_man_list_iter_move_next (      ccntr_man_list_iter_t *self);
+static inline
+bool ccntr_man_list_iter_have_value(const ccntr_man_list_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_iter_t
+     * @brief Check if have a valid value.
+     *
+     * @param self Object instance.
+     * @return TRUE if it have a value; and FALSE if not.
+     */
+    return self->node;
+}
+
+static inline
+void ccntr_man_list_iter_move_prev(ccntr_man_list_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_iter_t
+     * @brief Move iterator to the previous value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = self->node->prev;
+}
+
+static inline
+void ccntr_man_list_iter_move_next(ccntr_man_list_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_iter_t
+     * @brief Move iterator to the next value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = self->node->next;
+}
+
+void* ccntr_man_list_iter_get_value(ccntr_man_list_iter_t *self);
 
 /**
  * @class ccntr_man_list_citer_t
@@ -44,14 +85,55 @@ typedef struct ccntr_man_list_citer_t
     const ccntr_list_node_t       *node;
 } ccntr_man_list_citer_t;
 
+static inline
 void ccntr_man_list_citer_init(ccntr_man_list_citer_t        *self,
                                const struct ccntr_man_list_t *container,
-                               const ccntr_list_node_t       *node);
+                               const ccntr_list_node_t       *node)
+{
+    self->container = container;
+    self->node      = node;
+}
 
-bool        ccntr_man_list_citer_have_value(const ccntr_man_list_citer_t *self);
-const void* ccntr_man_list_citer_get_value (const ccntr_man_list_citer_t *self);
-void        ccntr_man_list_citer_move_prev (      ccntr_man_list_citer_t *self);
-void        ccntr_man_list_citer_move_next (      ccntr_man_list_citer_t *self);
+static inline
+bool ccntr_man_list_citer_have_value(const ccntr_man_list_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_citer_t
+     * @brief Check if have a valid value.
+     *
+     * @param self Object instance.
+     * @return TRUE if it have a value; and FALSE if not.
+     */
+    return self->node;
+}
+
+static inline
+void ccntr_man_list_citer_move_prev(ccntr_man_list_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_citer_t
+     * @brief Move iterator to the previous value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = self->node->prev;
+}
+
+static inline
+void ccntr_man_list_citer_move_next(ccntr_man_list_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_citer_t
+     * @brief Move iterator to the next value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = self->node->next;
+}
+
+const void* ccntr_man_list_citer_get_value(const ccntr_man_list_citer_t *self);
 
 /**
  * @brief Release value.
@@ -77,12 +159,86 @@ void ccntr_man_list_init(ccntr_man_list_t                  *self,
                          ccntr_man_list_on_value_release_t  on_value_release);
 void ccntr_man_list_destroy(ccntr_man_list_t *self);
 
-unsigned ccntr_man_list_get_count(const ccntr_man_list_t *self);
+static inline
+unsigned ccntr_man_list_get_count(const ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Get count of values it contained.
+     *
+     * @param self Object instance.
+     * @return The count of values.
+     */
+    return ccntr_list_get_count(&self->super);
+}
 
-ccntr_man_list_iter_t  ccntr_man_list_get_first  (      ccntr_man_list_t *self);
-ccntr_man_list_citer_t ccntr_man_list_get_first_c(const ccntr_man_list_t *self);
-ccntr_man_list_iter_t  ccntr_man_list_get_last   (      ccntr_man_list_t *self);
-ccntr_man_list_citer_t ccntr_man_list_get_last_c (const ccntr_man_list_t *self);
+static inline
+ccntr_man_list_iter_t ccntr_man_list_get_first(ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Get the first value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the first value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_list_iter_t iter;
+    ccntr_man_list_iter_init(&iter, self, ccntr_list_get_first(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_list_citer_t ccntr_man_list_get_first_c(const ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Get the first value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the first value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_list_citer_t iter;
+    ccntr_man_list_citer_init(&iter, self, ccntr_list_get_first_c(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_list_iter_t ccntr_man_list_get_last(ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Get the last value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the last value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_list_iter_t iter;
+    ccntr_man_list_iter_init(&iter, self, ccntr_list_get_last(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_list_citer_t ccntr_man_list_get_last_c(const ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Get the last value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the last value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_list_citer_t iter;
+    ccntr_man_list_citer_init(&iter, self, ccntr_list_get_last_c(&self->super));
+
+    return iter;
+}
 
 void ccntr_man_list_push_front(ccntr_man_list_t *self, void *value);
 void ccntr_man_list_push_back (ccntr_man_list_t *self, void *value);
