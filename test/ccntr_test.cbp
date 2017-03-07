@@ -18,25 +18,27 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="../include" />
+			<Add directory="../src" />
 		</Compiler>
 		<Linker>
 			<Add library="cmocka" />
 		</Linker>
-		<Unit filename="abort_message.h" />
-		<Unit filename="ccntr.h" />
-		<Unit filename="ccntr_list.c">
+		<Unit filename="../include/ccntr.h" />
+		<Unit filename="../include/ccntr_list.h" />
+		<Unit filename="../include/ccntr_list_template.h" />
+		<Unit filename="../include/ccntr_man_list.h" />
+		<Unit filename="../src/abort_message.h" />
+		<Unit filename="../src/ccntr_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ccntr_list.h" />
-		<Unit filename="ccntr_list_template.h" />
-		<Unit filename="ccntr_man_list.c">
+		<Unit filename="../src/ccntr_man_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ccntr_man_list.h" />
-		<Unit filename="ccntr_test.c">
+		<Unit filename="../src/container_of.h" />
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="container_of.h" />
 		<Unit filename="test_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
