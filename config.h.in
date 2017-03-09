@@ -1,7 +1,0 @@
-#ifndef _CCNTR_CONFIG_H_
-#define _CCNTR_CONFIG_H_
-
-#cmakedefine HAVE_MALLOC
-#cmakedefine HAVE_FREE
-
-#endif
