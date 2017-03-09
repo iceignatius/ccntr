@@ -263,4 +263,4 @@ void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
 }
 //------------------------------------------------------------------------------
 
-#endif CCNTR_MAN_LIST_ENABLED
+#endif  // CCNTR_MAN_LIST_ENABLED
