@@ -15,6 +15,7 @@ set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/main.c)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_BINARY_DIR})
 
 set(depend_libs ${depend_libs} ccntr)
 set(depend_libs ${depend_libs} cmocka)
