@@ -4,4 +4,8 @@
 #cmakedefine CCNTR_HAVE_MALLOC
 #cmakedefine CCNTR_HAVE_FREE
 
+#if defined(CCNTR_HAVE_MALLOC) && defined(CCNTR_HAVE_FREE)
+    #define CCNTR_MAN_LIST_ENABLED
+#endif
+
 #endif

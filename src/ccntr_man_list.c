@@ -2,6 +2,8 @@
 #include "abort_message.h"
 #include "ccntr_man_list.h"
 
+#ifdef CCNTR_MAN_LIST_ENABLED
+
 typedef ccntr_list_node_t node_t;
 
 typedef struct element_t
@@ -260,3 +262,5 @@ void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
     return element_release_but_keep_value(ele);
 }
 //------------------------------------------------------------------------------
+
+#endif CCNTR_MAN_LIST_ENABLED

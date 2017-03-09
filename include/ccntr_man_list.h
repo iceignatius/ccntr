@@ -9,11 +9,14 @@
 #define _CCNTR_MAN_LIST_H_
 
 #include <stdbool.h>
+#include "ccntr_config.h"
 #include "ccntr_list.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef CCNTR_MAN_LIST_ENABLED
 
 /**
  * @class ccntr_man_list_iter_t
@@ -250,6 +253,8 @@ void ccntr_man_list_erase (ccntr_man_list_t *self, ccntr_man_list_iter_t *pos);
 void ccntr_man_list_clear (ccntr_man_list_t *self);
 
 void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos);
+
+#endif  // CCNTR_MAN_LIST_ENABLED
 
 #ifdef __cplusplus
 }  // extern "C"
