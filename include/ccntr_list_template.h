@@ -10,6 +10,8 @@
 
 #include "ccntr_man_list.h"
 
+#ifdef CCNTR_MAN_LIST_ENABLED
+
 #define CCNTR_LIST_TEMPLATE(clsname, valtype, on_value_release)                 \
                                                                                 \
                                                                                 \
@@ -185,5 +187,7 @@ valtype clsname##_unlink(clsname##_t *self, clsname##_iter_t *pos)              
 {                                                                               \
     return (valtype) ccntr_man_list_unlink(&self->super, &pos->super);          \
 }
+
+#endif  // CCNTR_MAN_LIST_ENABLED
 
 #endif
