@@ -12,7 +12,7 @@
 
 #ifdef CCNTR_MAN_LIST_ENABLED
 
-#define CCNTR_LIST_TEMPLATE(clsname, valtype, on_value_release)                 \
+#define CCNTR_DECLARE_LIST(clsname, valtype, on_value_release)                  \
                                                                                 \
                                                                                 \
                                                                                 \

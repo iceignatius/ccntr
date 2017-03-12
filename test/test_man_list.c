@@ -26,7 +26,7 @@ void element_release(element_t *ele)
     free(ele);
 }
 //------------------------------------------------------------------------------
-CCNTR_LIST_TEMPLATE(list, element_t*, ((void(*)(void*))element_release))
+CCNTR_DECLARE_LIST(list, element_t*, (void(*)(void*))element_release)
 //------------------------------------------------------------------------------
 #define compare_list(list, target) compare_list_and_array(list, target, sizeof(target)/sizeof(target[0]))
 static

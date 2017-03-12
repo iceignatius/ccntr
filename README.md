@@ -34,7 +34,7 @@ we implement 3 sub types for different occasion and preference:
     The container templates are similarly to managed container,
     but handles user data type convertion.
     user can build their container class with specific data type and class name
-    by `CCNTR_<type>_TEMPLATE` macro.
+    by `CCNTR_DECLARE_<type>` macro.
 
     The container be built by template will be named as `<user_defined_name>_*`.
 
@@ -78,12 +78,12 @@ beacuse the others are similarly.
         free(ele);
     }
 
-    // Use CCNTR_LIST_TEMPLATE macro to build or list class with
+    // Use CCNTR_DECLARE_LIST macro to build our list class with
     // class name "mylist", and element type "element_t*".
     // Note that we assign the function "element_release" to the container,
     // then we will not need to release each element when we pop or erase it
     // from container.
-    CCNTR_LIST_TEMPLATE(mylist, element_t*, (void(*)(void*))element_release)
+    CCNTR_DECLARE_LIST(mylist, element_t*, (void(*)(void*))element_release)
 
     int main(int argc, char *argv[])
     {
