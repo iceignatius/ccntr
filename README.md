@@ -209,11 +209,15 @@ beacuse the others are similarly.
 
         // Remarks:
         //
-        // If we are finish using the container,
+        // If we are going to erase all elements,
         // then unlink each nodes (1) are not necessary.
         // We can just go through all nodes and free it,
-        // then use discard function (2)
-        // to discard all nodes in the container.
+        // then use discard function (2) to discard all nodes in the container.
+        //
+        // If you are finished using the container,
+        // then you can even free all elements and just leave the container there.
+        // The key point is that
+        // pure containers do nothing about memory management.
 
         return 0;
     }
