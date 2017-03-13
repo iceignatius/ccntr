@@ -144,7 +144,7 @@ const void* ccntr_man_list_citer_get_value(const ccntr_man_list_citer_t *self);
  *
  * @param value The value to be released.
  */
-typedef void(*ccntr_man_list_on_value_release_t)(void *value);
+typedef void(*ccntr_man_list_release_value_t)(void *value);
 
 /**
  * @class ccntr_list_t
@@ -154,12 +154,12 @@ typedef struct ccntr_man_list_t
 {
     ccntr_list_t super;
 
-    ccntr_man_list_on_value_release_t on_value_release;
+    ccntr_man_list_release_value_t release_value;
 
 } ccntr_man_list_t;
 
-void ccntr_man_list_init(ccntr_man_list_t                  *self,
-                         ccntr_man_list_on_value_release_t  on_value_release);
+void ccntr_man_list_init(ccntr_man_list_t               *self,
+                         ccntr_man_list_release_value_t  release_value);
 void ccntr_man_list_destroy(ccntr_man_list_t *self);
 
 static inline

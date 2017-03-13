@@ -27,9 +27,9 @@ element_t* element_create(void *value)
 }
 //------------------------------------------------------------------------------
 static
-void element_release(element_t *ele, ccntr_man_list_on_value_release_t on_value_release)
+void element_release(element_t *ele, ccntr_man_list_release_value_t release_value)
 {
-    on_value_release(ele->value);
+    release_value(ele->value);
     free(ele);
 }
 //------------------------------------------------------------------------------
@@ -79,27 +79,27 @@ const void* ccntr_man_list_citer_get_value(const ccntr_man_list_citer_t *self)
 //---- List --------------------------------------------------------------------
 //------------------------------------------------------------------------------
 static
-void on_value_release_default(void *value)
+void release_value_default(void *value)
 {
     // Nothing to do.
 }
 //------------------------------------------------------------------------------
-void ccntr_man_list_init(ccntr_man_list_t                  *self,
-                         ccntr_man_list_on_value_release_t  on_value_release)
+void ccntr_man_list_init(ccntr_man_list_t               *self,
+                         ccntr_man_list_release_value_t  release_value)
 {
     /**
      * @memberof ccntr_man_list_t
      * @brief Constructor.
      *
-     * @param self             Object instance.
-     * @param on_value_release Callback to release contained values,
-     *                         and can be NULL to do nothing.
+     * @param self          Object instance.
+     * @param release_value Callback to release contained values,
+     *                      and can be NULL to do nothing.
      *
      * @remarks Object must be initialised (and once only) before using.
      */
     ccntr_list_init(&self->super);
 
-    self->on_value_release = on_value_release ? on_value_release : on_value_release_default;
+    self->release_value = release_value ? release_value : release_value_default;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_list_destroy(ccntr_man_list_t *self)
@@ -158,7 +158,7 @@ void ccntr_man_list_pop_first(ccntr_man_list_t *self)
     ccntr_list_unlink(&self->super, node);
 
     element_t *ele = container_of(node, element_t, node);
-    element_release(ele, self->on_value_release);
+    element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_list_pop_last(ccntr_man_list_t *self)
@@ -175,7 +175,7 @@ void ccntr_man_list_pop_last(ccntr_man_list_t *self)
     ccntr_list_unlink(&self->super, node);
 
     element_t *ele = container_of(node, element_t, node);
-    element_release(ele, self->on_value_release);
+    element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_list_insert(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos, void *value)
@@ -214,7 +214,7 @@ void ccntr_man_list_erase(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
     ccntr_list_unlink(&self->super, node);
 
     element_t *ele = container_of(node, element_t, node);
-    element_release(ele, self->on_value_release);
+    element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_list_clear(ccntr_man_list_t *self)
@@ -231,7 +231,7 @@ void ccntr_man_list_clear(ccntr_man_list_t *self)
         element_t *ele = container_of(node, element_t, node);
         node = node->next;
 
-        element_release(ele, self->on_value_release);
+        element_release(ele, self->release_value);
     }
 
     ccntr_list_discard_all(&self->super);
