@@ -11,5 +11,6 @@
 #include "ccntr_list.h"
 #include "ccntr_man_list.h"
 #include "ccntr_list_template.h"
+#include "ccntr_map.h"
 
 #endif
