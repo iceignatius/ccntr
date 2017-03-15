@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdint.h>
 #include "ccntr_map.h"
 
 typedef ccntr_map_node_t node_t;
@@ -272,6 +273,12 @@ const node_t* ccntr_map_node_get_prev_c(const node_t *self)
 //------------------------------------------------------------------------------
 //---- Container ---------------------------------------------------------------
 //------------------------------------------------------------------------------
+static
+int compare_default(const void *key1, const void *key2)
+{
+    return (intptr_t) key1 - (intptr_t) key2;
+}
+//------------------------------------------------------------------------------
 void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare)
 {
     /**
@@ -280,10 +287,12 @@ void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare)
      *
      * @param self    Object instance.
      * @param compare A function to be used to compare keys.
+     *                If this parameter is NULL, then
+     *                all keys will be treated as integral values.
      */
     self->root    = NULL;
     self->count   = 0;
-    self->compare = compare;
+    self->compare = compare ? compare : compare_default;
 }
 //------------------------------------------------------------------------------
 unsigned ccntr_map_get_count(const ccntr_map_t *self)
