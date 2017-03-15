@@ -11,6 +11,7 @@ endif()
 
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_list.c)
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_man_list.c)
+set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_map.c)
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/main.c)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

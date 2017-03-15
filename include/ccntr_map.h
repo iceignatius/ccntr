@@ -9,6 +9,7 @@
 #define _CCNTR_MAP_H_
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,7 +21,14 @@ extern "C" {
  */
 typedef struct ccntr_map_node_t
 {
+    struct ccntr_map_node_t *parent;
+    struct ccntr_map_node_t *left;
+    struct ccntr_map_node_t *right;
+
+    bool is_red;
+
     void *key;  ///< The key of the node.
+
 } ccntr_map_node_t;
 
 ccntr_map_node_t* ccntr_map_node_get_next(ccntr_map_node_t *self);
@@ -45,6 +53,8 @@ typedef int(*ccntr_map_compare_keys_t)(const void *key1, const void *key2);
  */
 typedef struct ccntr_map_t
 {
+    ccntr_map_node_t *root;
+    unsigned          count;
 } ccntr_map_t;
 
 void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare_keys);
