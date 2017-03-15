@@ -23,6 +23,7 @@ const node_t* ccntr_map_node_get_next_c(const node_t *self)
      * @param self Object instance.
      * @return The next node; or NULL if there does not have the next node.
      */
+    return ccntr_map_node_get_next((node_t*)self);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_node_get_prev(node_t *self)
@@ -45,7 +46,10 @@ const node_t* ccntr_map_node_get_prev_c(const node_t *self)
      * @param self Object instance.
      * @return The previous node; or NULL if there does not have the previous node.
      */
+    return ccntr_map_node_get_prev((node_t*)self);
 }
+//------------------------------------------------------------------------------
+//---- Container ---------------------------------------------------------------
 //------------------------------------------------------------------------------
 void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare_keys)
 {
@@ -56,6 +60,10 @@ void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare_keys)
      * @param self         Object instance.
      * @param compare_keys A function to be used to compare keys.
      */
+    self->root  = NULL;
+    self->count = 0;
+
+    self->compare_keys = compare_keys;
 }
 //------------------------------------------------------------------------------
 unsigned ccntr_map_get_count(const ccntr_map_t *self)
@@ -67,6 +75,7 @@ unsigned ccntr_map_get_count(const ccntr_map_t *self)
      * @param self Object instance.
      * @return The nodes count.
      */
+    return self->count;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_get_first(ccntr_map_t *self)
@@ -89,6 +98,7 @@ const node_t* ccntr_map_get_first_c(const ccntr_map_t *self)
      * @param self Object instance.
      * @return The first node; or NULL if no any nodes contained.
      */
+    return ccntr_map_get_first((ccntr_map_t*)self);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_get_last(ccntr_map_t *self)
@@ -111,6 +121,7 @@ const node_t* ccntr_map_get_last_c(const ccntr_map_t *self)
      * @param self Object instance.
      * @return The last node; or NULL if no any nodes contained.
      */
+    return ccntr_map_get_last((ccntr_map_t*)self);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
@@ -162,6 +173,7 @@ const node_t* ccntr_map_find_c(const ccntr_map_t *self, const void *key)
      * @param key  Key of the node.
      * @return The node if found; and NULL if not found.
      */
+    return ccntr_map_find((ccntr_map_t*)self, key);
 }
 //------------------------------------------------------------------------------
 void ccntr_map_discard_all(ccntr_map_t *self)
@@ -172,5 +184,7 @@ void ccntr_map_discard_all(ccntr_map_t *self)
      *
      * @param self Object instance.
      */
+    self->root  = NULL;
+    self->count = 0;
 }
 //------------------------------------------------------------------------------

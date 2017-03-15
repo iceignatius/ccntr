@@ -55,6 +55,9 @@ typedef struct ccntr_map_t
 {
     ccntr_map_node_t *root;
     unsigned          count;
+
+    ccntr_map_compare_keys_t compare_keys;
+
 } ccntr_map_t;
 
 void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare_keys);
