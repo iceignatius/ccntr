@@ -229,10 +229,13 @@ node_t* ccntr_map_node_get_next(node_t *self)
 {
     /**
      * @memberof ccntr_map_node_t
-     * @brief Get the next node.
+     * @brief Get the next node (in order).
      *
      * @param self Object instance.
      * @return The next node; or NULL if there does not have the next node.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and nodes will be visited from the smaller key to the larger.
      */
 }
 //------------------------------------------------------------------------------
@@ -240,10 +243,13 @@ const node_t* ccntr_map_node_get_next_c(const node_t *self)
 {
     /**
      * @memberof ccntr_map_node_t
-     * @brief Get the next node.
+     * @brief Get the next node (in order).
      *
      * @param self Object instance.
      * @return The next node; or NULL if there does not have the next node.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and nodes will be visited from the smaller key to the larger.
      */
     return ccntr_map_node_get_next((node_t*)self);
 }
@@ -252,10 +258,13 @@ node_t* ccntr_map_node_get_prev(node_t *self)
 {
     /**
      * @memberof ccntr_map_node_t
-     * @brief Get the previous node.
+     * @brief Get the previous node (in order).
      *
      * @param self Object instance.
      * @return The previous node; or NULL if there does not have the previous node.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and nodes will be visited from the larger key to the smaller.
      */
 }
 //------------------------------------------------------------------------------
@@ -263,12 +272,29 @@ const node_t* ccntr_map_node_get_prev_c(const node_t *self)
 {
     /**
      * @memberof ccntr_map_node_t
-     * @brief Get the previous node.
+     * @brief Get the previous node (in order).
      *
      * @param self Object instance.
      * @return The previous node; or NULL if there does not have the previous node.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and nodes will be visited from the larger key to the smaller.
      */
     return ccntr_map_node_get_prev((node_t*)self);
+}
+//------------------------------------------------------------------------------
+node_t* ccntr_map_node_get_next_postorder(node_t *self)
+{
+    /**
+     * @memberof ccntr_map_node_t
+     * @brief Get the next node (post order).
+     *
+     * @param self Object instance.
+     * @return The next node; or NULL if there does not have the next node.
+     *
+     * @remarks Visit nodes with post-order rule usually be suit for some usage
+     *          like visit and release all nodes.
+     */
 }
 //------------------------------------------------------------------------------
 //---- Container ---------------------------------------------------------------
@@ -311,10 +337,13 @@ node_t* ccntr_map_get_first(ccntr_map_t *self)
 {
     /**
      * @memberof ccntr_map_t
-     * @brief Get the first node.
+     * @brief Get the first node (in order).
      *
      * @param self Object instance.
      * @return The first node; or NULL if no any nodes contained.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and the first node will have the smallest key.
      */
     return tree_get_first_inorder(self->root);
 }
@@ -323,10 +352,13 @@ const node_t* ccntr_map_get_first_c(const ccntr_map_t *self)
 {
     /**
      * @memberof ccntr_map_t
-     * @brief Get the first node.
+     * @brief Get the first node (in order).
      *
      * @param self Object instance.
      * @return The first node; or NULL if no any nodes contained.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and the first node will have the smallest key.
      */
     return ccntr_map_get_first((ccntr_map_t*)self);
 }
@@ -339,6 +371,9 @@ node_t* ccntr_map_get_last(ccntr_map_t *self)
      *
      * @param self Object instance.
      * @return The last node; or NULL if no any nodes contained.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and the last node will have the largest key.
      */
     return tree_get_last_inorder(self->root);
 }
@@ -351,8 +386,25 @@ const node_t* ccntr_map_get_last_c(const ccntr_map_t *self)
      *
      * @param self Object instance.
      * @return The last node; or NULL if no any nodes contained.
+     *
+     * @remarks Visit nodes with in-order rule usually be suit for most usage,
+     *          and the last node will have the largest key.
      */
     return ccntr_map_get_last((ccntr_map_t*)self);
+}
+//------------------------------------------------------------------------------
+node_t* ccntr_map_get_first_postorder(ccntr_map_t *self)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Get the first node (post order).
+     *
+     * @param self Object instance.
+     * @return The first node; or NULL if no any nodes contained.
+     *
+     * @remarks Visit nodes with post-order rule usually be suit for some usage
+     *          like visit and release all nodes.
+     */
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)

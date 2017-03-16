@@ -35,6 +35,7 @@ ccntr_map_node_t* ccntr_map_node_get_next(ccntr_map_node_t *self);
 const ccntr_map_node_t* ccntr_map_node_get_next_c(const ccntr_map_node_t *self);
 ccntr_map_node_t* ccntr_map_node_get_prev(ccntr_map_node_t *self);
 const ccntr_map_node_t* ccntr_map_node_get_prev_c(const ccntr_map_node_t *self);
+ccntr_map_node_t* ccntr_map_node_get_next_postorder(ccntr_map_node_t *self);
 
 /**
  * A function that compare two keys.
@@ -68,6 +69,7 @@ ccntr_map_node_t* ccntr_map_get_first(ccntr_map_t *self);
 const ccntr_map_node_t* ccntr_map_get_first_c(const ccntr_map_t *self);
 ccntr_map_node_t* ccntr_map_get_last(ccntr_map_t *self);
 const ccntr_map_node_t* ccntr_map_get_last_c(const ccntr_map_t *self);
+ccntr_map_node_t* ccntr_map_get_first_postorder(ccntr_map_t *self);
 
 ccntr_map_node_t* ccntr_map_find(ccntr_map_t *self, const void *key);
 const ccntr_map_node_t* ccntr_map_find_c(const ccntr_map_t *self, const void *key);
