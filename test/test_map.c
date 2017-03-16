@@ -32,7 +32,7 @@ int compare_keys(const void *key1, const void *key2)
 }
 //------------------------------------------------------------------------------
 static
-void map_simple_link_unlink_iterate_test(void **state)
+void map_simple_link_test(void **state)
 {
     // Initialise container.
 
@@ -46,6 +46,47 @@ void map_simple_link_unlink_iterate_test(void **state)
     node_t *node_9 = node_create(9);
 
     // Link test.
+
+    assert_int_equal( ccntr_map_get_count(&map), 0 );
+
+    assert_null( ccntr_map_link(&map, node_1) );
+    assert_int_equal( ccntr_map_get_count(&map), 1 );
+
+    assert_null( ccntr_map_link(&map, node_3) );
+    assert_int_equal( ccntr_map_get_count(&map), 2 );
+
+    assert_null( ccntr_map_link(&map, node_5) );
+    assert_int_equal( ccntr_map_get_count(&map), 3 );
+
+    assert_null( ccntr_map_link(&map, node_7) );
+    assert_int_equal( ccntr_map_get_count(&map), 4 );
+
+    assert_null( ccntr_map_link(&map, node_9) );
+    assert_int_equal( ccntr_map_get_count(&map), 5 );
+
+    // Clear.
+
+    node_release(node_1);
+    node_release(node_3);
+    node_release(node_5);
+    node_release(node_7);
+    node_release(node_9);
+    ccntr_map_discard_all(&map);
+}
+//------------------------------------------------------------------------------
+static
+void map_iterate_test(void **state)
+{
+    // Build container base.
+
+    ccntr_map_t map;
+    ccntr_map_init(&map, compare_keys);
+
+    node_t *node_1 = node_create(1);
+    node_t *node_3 = node_create(3);
+    node_t *node_5 = node_create(5);
+    node_t *node_7 = node_create(7);
+    node_t *node_9 = node_create(9);
 
     assert_null( ccntr_map_link(&map, node_1) );
     assert_null( ccntr_map_link(&map, node_3) );
@@ -70,37 +111,71 @@ void map_simple_link_unlink_iterate_test(void **state)
     node = ccntr_map_node_get_prev(node); assert_ptr_equal( node, node_1 );
     node = ccntr_map_node_get_prev(node); assert_null( node );
 
+    // Clear.
+
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
+    ccntr_map_discard_all(&map);
+}
+//------------------------------------------------------------------------------
+static
+void map_unlink_test(void **state)
+{
+    // Build container base.
+
+    ccntr_map_t map;
+    ccntr_map_init(&map, compare_keys);
+
+    node_t *node_1 = node_create(1);
+    node_t *node_3 = node_create(3);
+    node_t *node_5 = node_create(5);
+    node_t *node_7 = node_create(7);
+    node_t *node_9 = node_create(9);
+
+    assert_null( ccntr_map_link(&map, node_1) );
+    assert_null( ccntr_map_link(&map, node_3) );
+    assert_null( ccntr_map_link(&map, node_5) );
+    assert_null( ccntr_map_link(&map, node_7) );
+    assert_null( ccntr_map_link(&map, node_9) );
+    assert_int_equal( ccntr_map_get_count(&map), 5 );
+
     // Unlink test.
 
-    node = ccntr_map_get_first(&map);
-    assert_ptr_equal( node, node_1 );
-    ccntr_map_unlink(&map, node);
+    ccntr_map_unlink(&map, node_3);
+    assert_int_equal( ccntr_map_get_count(&map), 4 );
 
-    node = ccntr_map_get_first(&map);
-    assert_ptr_equal( node, node_3 );
-    ccntr_map_unlink(&map, node);
+    ccntr_map_unlink(&map, node_7);
+    assert_int_equal( ccntr_map_get_count(&map), 3 );
 
-    node = ccntr_map_get_first(&map);
-    assert_ptr_equal( node, node_5 );
-    ccntr_map_unlink(&map, node);
+    // Iterate test.
 
-    node = ccntr_map_get_first(&map);
-    assert_ptr_equal( node, node_7 );
-    ccntr_map_unlink(&map, node);
+    node_t *node = ccntr_map_get_first(&map); assert_ptr_equal( node, node_1 );
+    node = ccntr_map_node_get_next(node); assert_ptr_equal( node, node_5 );
+    node = ccntr_map_node_get_next(node); assert_ptr_equal( node, node_9 );
+    node = ccntr_map_node_get_next(node); assert_null( node );
 
-    node = ccntr_map_get_first(&map);
-    assert_ptr_equal( node, node_9 );
-    ccntr_map_unlink(&map, node);
-
-    assert_int_equal( ccntr_map_get_count(&map), 0 );
+    node = ccntr_map_get_last(&map); assert_ptr_equal( node, node_9 );
+    node = ccntr_map_node_get_prev(node); assert_ptr_equal( node, node_5 );
+    node = ccntr_map_node_get_prev(node); assert_ptr_equal( node, node_1 );
+    node = ccntr_map_node_get_prev(node); assert_null( node );
 
     // Clear.
 
-    node_release(node_1);
-    node_release(node_3);
-    node_release(node_5);
-    node_release(node_7);
-    node_release(node_9);
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
+    ccntr_map_discard_all(&map);
 }
 //------------------------------------------------------------------------------
 static
@@ -140,12 +215,15 @@ void map_search_test(void **state)
 
     // Clear.
 
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
     ccntr_map_discard_all(&map);
-    node_release(node_1);
-    node_release(node_3);
-    node_release(node_5);
-    node_release(node_7);
-    node_release(node_9);
 }
 //------------------------------------------------------------------------------
 static
@@ -174,16 +252,19 @@ void map_duplicated_link_test(void **state)
     node_t *node_7_duplicated = node_create(7);
     assert_ptr_equal( ccntr_map_link(&map, node_7_duplicated), node_7 );
     assert_ptr_equal( ccntr_map_find(&map, (void*)(intptr_t) 7), node_7_duplicated );
+    node_release(node_7);
 
     // Clear.
 
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
     ccntr_map_discard_all(&map);
-    node_release(node_1);
-    node_release(node_3);
-    node_release(node_5);
-    node_release(node_7);
-    node_release(node_9);
-    node_release(node_7_duplicated);
 }
 //------------------------------------------------------------------------------
 static
@@ -371,7 +452,9 @@ int test_map(void)
 {
     struct CMUnitTest tests[] =
     {
-        cmocka_unit_test(map_simple_link_unlink_iterate_test),
+        cmocka_unit_test(map_simple_link_test),
+        cmocka_unit_test(map_iterate_test),
+        cmocka_unit_test(map_unlink_test),
         cmocka_unit_test(map_search_test),
         cmocka_unit_test(map_duplicated_link_test),
         cmocka_unit_test(map_rbtree_condition_test),
