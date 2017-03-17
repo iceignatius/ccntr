@@ -554,6 +554,7 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
         else
         {
             self->root = tree_replace_node(self->root, closest, node);
+            duplicated = closest;
         }
     }
     else
