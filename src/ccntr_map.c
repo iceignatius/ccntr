@@ -232,7 +232,7 @@ void node_unlink_right(node_t *node)
 static
 node_t* tree_move_node_parent(node_t *root, node_t *from, node_t *to)
 {
-    assert( from && to );
+    assert( from );
 
     node_t *parent = from->parent;
     if( parent )
