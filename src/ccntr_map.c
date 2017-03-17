@@ -5,6 +5,17 @@
 typedef ccntr_map_node_t node_t;
 
 //------------------------------------------------------------------------------
+//---- Node Initialise ---------------------------------------------------------
+//------------------------------------------------------------------------------
+static
+void node_reset(node_t *node)
+{
+    node->parent = NULL;
+    node->left   = NULL;
+    node->right  = NULL;
+    node->is_red = true;
+}
+//------------------------------------------------------------------------------
 //---- Node Characteristics ----------------------------------------------------
 //------------------------------------------------------------------------------
 static
@@ -164,7 +175,100 @@ node_t* tree_find_match(node_t *root, const void *key, ccntr_map_compare_keys_t 
 //------------------------------------------------------------------------------
 //---- Node Link ---------------------------------------------------------------
 //------------------------------------------------------------------------------
-#warning Not implemented!
+static
+void node_link_left(node_t *main, node_t *node)
+{
+    assert( main );
+    assert( !main->left );
+
+    if( node )
+    {
+        main->left   = node;
+        node->parent = main;
+    }
+}
+//------------------------------------------------------------------------------
+static
+void node_link_right(node_t *main, node_t *node)
+{
+    assert( main );
+    assert( !main->right );
+
+    if( node )
+    {
+        main->right  = node;
+        node->parent = main;
+    }
+}
+//------------------------------------------------------------------------------
+static
+void node_unlink_left(node_t *node)
+{
+    assert( node );
+
+    node_t *child = node->left;
+    if( child )
+    {
+        node ->left   = NULL;
+        child->parent = NULL;
+    }
+}
+//------------------------------------------------------------------------------
+static
+void node_unlink_right(node_t *node)
+{
+    assert( node );
+
+    node_t *child = node->right;
+    if( child )
+    {
+        node ->right  = NULL;
+        child->parent = NULL;
+    }
+}
+//------------------------------------------------------------------------------
+//---- Node Link - Advanced ----------------------------------------------------
+//------------------------------------------------------------------------------
+static
+node_t* tree_move_node_parent(node_t *root, node_t *from, node_t *to)
+{
+    assert( from && to );
+
+    node_t *parent = from->parent;
+    if( parent )
+    {
+        if( from == parent->left )
+            parent->left = to;
+        else
+            parent->right = to;
+
+        if( to ) to->parent = parent;
+        from->parent = NULL;
+    }
+    else
+    {
+        assert( root == from );
+        root = to;
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_replace_node(node_t *root, node_t *node_old, node_t *node_new)
+{
+    assert( root && node_old && node_new );
+
+    node_t *left = node_old->left;
+    node_unlink_left(node_old);
+    node_link_left(node_new, left);
+
+    node_t *right = node_old->right;
+    node_unlink_right(node_old);
+    node_link_right(node_new, right);
+
+    return tree_move_node_parent(root, node_old, node_new);
+}
 //------------------------------------------------------------------------------
 //---- Node Visit (In Order) ---------------------------------------------------
 //------------------------------------------------------------------------------
@@ -421,6 +525,37 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
      * @return A node be pop out which have the same key with the new node;
      *         or NULL if there do not have node with duplicated keys.
      */
+    if( !node ) return NULL;
+
+    node_reset(node);
+
+    node_t *duplicated = NULL;
+    node_t *closest = tree_find_closest(self->root, node->key, self->compare);
+    if( closest )
+    {
+        int comp_res = self->compare(closest->key, node->key);
+        if( comp_res < 0 )
+        {
+            node_link_right(closest, node);
+            ++ self->count;
+        }
+        else if( comp_res > 0 )
+        {
+            node_link_left(closest, node);
+            ++ self->count;
+        }
+        else
+        {
+            self->root = tree_replace_node(self->root, closest, node);
+        }
+    }
+    else
+    {
+        self->root = node;
+        ++ self->count;
+    }
+
+    return duplicated;
 }
 //------------------------------------------------------------------------------
 void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
