@@ -295,6 +295,119 @@ void tree_swap_node_color(node_t *node1, node_t *node2)
     node2->is_red = temp;
 }
 //------------------------------------------------------------------------------
+static
+node_t* tree_rotate_node_left(node_t *root, node_t *node)
+{
+    assert( node && node->right );
+
+    node_t *left   = node;
+    node_t *right  = node->right;
+    node_t *middle = right->left;
+
+    node_unlink_left(right);
+    node_unlink_right(left);
+    root = tree_move_node_parent(root, left, right);
+    node_link_left(right, left);
+    node_link_right(left, middle);
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_rotate_node_right(node_t *root, node_t *node)
+{
+    assert( node && node->left );
+
+    node_t *left   = node->left;
+    node_t *right  = node;
+    node_t *middle = left->right;
+
+    node_unlink_right(left);
+    node_unlink_left(right);
+    root = tree_move_node_parent(root, right, left);
+    node_link_right(left, right);
+    node_link_left(right, middle);
+
+    return root;
+}
+//------------------------------------------------------------------------------
+//---- Tree Adjust -------------------------------------------------------------
+//------------------------------------------------------------------------------
+static
+node_t* tree_insert_adjust_case_parent_red_uncle_black_and_node_inner(node_t *root, node_t **node)
+{
+    node_t *parent = (*node)->parent;
+    node_t *grand  = node_get_grand_parent(*node);
+    assert( parent && grand );
+
+    if( (*node) == parent->right && parent == grand->left )
+    {
+        root = tree_rotate_node_left(root, parent);
+        (*node) = (*node)->left;
+    }
+    else if( (*node) == parent->left && parent == grand->right )
+    {
+        root = tree_rotate_node_right(root, parent);
+        (*node) = (*node)->right;
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_insert_adjust_case_parent_red_uncle_black_and_node_outer(node_t *root, node_t *node)
+{
+    node_t *parent = node->parent;
+    node_t *grand  = node_get_grand_parent(node);
+
+    parent->is_red = false;
+    grand ->is_red = true;
+
+    if( node == parent->left && parent == grand->left )
+    {
+        root = tree_rotate_node_right(root, grand);
+    }
+    else if( node == parent->right && parent == grand->right )
+    {
+        root = tree_rotate_node_left(root, grand);
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_insert_adjust(node_t *root, node_t *node)
+{
+    assert( root && node );
+
+    node_t *parent = node->parent;
+    node_t *grand  = node_get_grand_parent(node);
+    node_t *uncle  = node_get_uncle(node);
+
+    if( !parent )
+    {
+        node->is_red = false;
+    }
+    else if( !parent->is_red )
+    {
+        // Nothing to do.
+    }
+    else if( uncle && uncle->is_red )
+    {
+        parent->is_red = false;
+        uncle ->is_red = false;
+        grand ->is_red = true;
+        root = tree_insert_adjust(root, grand);
+    }
+    else
+    {
+        root = tree_insert_adjust_case_parent_red_uncle_black_and_node_inner(root, &node);
+        root = tree_insert_adjust_case_parent_red_uncle_black_and_node_outer(root, node);
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
 //---- Node Visit (In Order) ---------------------------------------------------
 //------------------------------------------------------------------------------
 static
@@ -569,13 +682,13 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
         if( comp_res < 0 )
         {
             node_link_right(closest, node);
-#warning Nodes adjust not implemented!
+            self->root = tree_insert_adjust(self->root, node);
             ++ self->count;
         }
         else if( comp_res > 0 )
         {
             node_link_left(closest, node);
-#warning Nodes adjust not implemented!
+            self->root = tree_insert_adjust(self->root, node);
             ++ self->count;
         }
         else
@@ -587,7 +700,7 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
     else
     {
         self->root = node;
-#warning Nodes adjust not implemented!
+        self->root = tree_insert_adjust(self->root, node);
         ++ self->count;
     }
 
@@ -616,11 +729,10 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
         tree_swap_node_color(node, nearest);
     }
 
-    // Extract the node and adjust the rest
+    // Unlink the node, and use its child to replace the position.
     node_t *child = node->left ? node->left : node->right;
     self->root = tree_move_node_parent(self->root, node, child);
 
-    // Nodes adjust.
 #warning Nodes adjust not implemented!
 
     assert( self->count );
