@@ -259,6 +259,8 @@ node_t* tree_replace_node(node_t *root, node_t *node_old, node_t *node_new)
 {
     assert( root && node_old && node_new );
 
+    node_new->is_red = node_old->is_red;
+
     node_t *left = node_old->left;
     node_unlink_left(node_old);
     node_link_left(node_new, left);
