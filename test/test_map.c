@@ -148,9 +148,11 @@ void map_unlink_test(void **state)
     // Unlink test.
 
     ccntr_map_unlink(&map, node_3);
+    node_release(node_3);
     assert_int_equal( ccntr_map_get_count(&map), 4 );
 
     ccntr_map_unlink(&map, node_7);
+    node_release(node_7);
     assert_int_equal( ccntr_map_get_count(&map), 3 );
 
     // Iterate test.

@@ -272,6 +272,29 @@ node_t* tree_replace_node(node_t *root, node_t *node_old, node_t *node_new)
     return tree_move_node_parent(root, node_old, node_new);
 }
 //------------------------------------------------------------------------------
+static
+node_t* tree_swap_node_pos(node_t *root, node_t *node1, node_t *node2)
+{
+    assert( root && node1 && node2 );
+
+    node_t temp = {0};
+    root = tree_replace_node(root, node1, &temp);
+    root = tree_replace_node(root, node2, node1);
+    root = tree_replace_node(root, &temp, node2);
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+void tree_swap_node_color(node_t *node1, node_t *node2)
+{
+    assert( node1 && node2 );
+
+    bool temp = node1->is_red;
+    node1->is_red = node2->is_red;
+    node2->is_red = temp;
+}
+//------------------------------------------------------------------------------
 //---- Node Visit (In Order) ---------------------------------------------------
 //------------------------------------------------------------------------------
 static
@@ -546,11 +569,13 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
         if( comp_res < 0 )
         {
             node_link_right(closest, node);
+#warning Nodes adjust not implemented!
             ++ self->count;
         }
         else if( comp_res > 0 )
         {
             node_link_left(closest, node);
+#warning Nodes adjust not implemented!
             ++ self->count;
         }
         else
@@ -562,6 +587,7 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
     else
     {
         self->root = node;
+#warning Nodes adjust not implemented!
         ++ self->count;
     }
 
@@ -580,6 +606,25 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
      * @attention The node to be unlinkd must be a member of this container,
      *            or the behaviour is undefuned!
      */
+    if( !node ) return;
+
+    // Exchange node position with the nearest single/no child node.
+    if( node_have_full_child(node) )
+    {
+        node_t *nearest = node_get_rightmost_child(node->left);
+        self->root = tree_swap_node_pos(self->root, node, nearest);
+        tree_swap_node_color(node, nearest);
+    }
+
+    // Extract the node and adjust the rest
+    node_t *child = node->left ? node->left : node->right;
+    self->root = tree_move_node_parent(self->root, node, child);
+
+    // Nodes adjust.
+#warning Nodes adjust not implemented!
+
+    assert( self->count );
+    -- self->count;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_find(ccntr_map_t *self, const void *key)
