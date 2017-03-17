@@ -341,6 +341,7 @@ node_t* ccntr_map_node_get_next(node_t *self)
      * @remarks Visit nodes with in-order rule usually be suit for most usage,
      *          and nodes will be visited from the smaller key to the larger.
      */
+    return node_get_next_inorder(self);
 }
 //------------------------------------------------------------------------------
 const node_t* ccntr_map_node_get_next_c(const node_t *self)
@@ -370,6 +371,7 @@ node_t* ccntr_map_node_get_prev(node_t *self)
      * @remarks Visit nodes with in-order rule usually be suit for most usage,
      *          and nodes will be visited from the larger key to the smaller.
      */
+    return node_get_prev_inorder(self);
 }
 //------------------------------------------------------------------------------
 const node_t* ccntr_map_node_get_prev_c(const node_t *self)
@@ -399,6 +401,7 @@ node_t* ccntr_map_node_get_next_postorder(node_t *self)
      * @remarks Visit nodes with post-order rule usually be suit for some usage
      *          like visit and release all nodes.
      */
+    return node_get_next_postorder(self);
 }
 //------------------------------------------------------------------------------
 //---- Container ---------------------------------------------------------------
@@ -509,6 +512,7 @@ node_t* ccntr_map_get_first_postorder(ccntr_map_t *self)
      * @remarks Visit nodes with post-order rule usually be suit for some usage
      *          like visit and release all nodes.
      */
+    return tree_get_first_postorder(self->root);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
@@ -585,6 +589,7 @@ node_t* ccntr_map_find(ccntr_map_t *self, const void *key)
      * @param key  Key of the node.
      * @return The node if found; and NULL if not found.
      */
+    return tree_find_match(self->root, key, self->compare);
 }
 //------------------------------------------------------------------------------
 const node_t* ccntr_map_find_c(const ccntr_map_t *self, const void *key)
