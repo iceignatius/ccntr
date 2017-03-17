@@ -249,10 +249,13 @@ void map_duplicated_link_test(void **state)
 
     // Duplicated link test.
 
-    node_t *node_7_duplicated = node_create(7);
-    assert_ptr_equal( ccntr_map_link(&map, node_7_duplicated), node_7 );
-    assert_ptr_equal( ccntr_map_find(&map, (void*)(intptr_t) 7), node_7_duplicated );
-    node_release(node_7);
+    node_t *node_7_new = node_create(7);
+    node_t *node_7_old = ccntr_map_link(&map, node_7_new);
+    assert_ptr_equal( node_7_old, node_7 );
+    assert_int_equal( ccntr_map_get_count(&map), 5 );
+
+    assert_ptr_equal( ccntr_map_find(&map, (void*)(intptr_t) 7), node_7_new );
+    node_release(node_7_old);
 
     // Clear.
 
