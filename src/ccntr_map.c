@@ -524,6 +524,9 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
      *             and the new one will be saved.
      * @return A node be pop out which have the same key with the new node;
      *         or NULL if there do not have node with duplicated keys.
+     *
+     * @attention The new node to be linked must be isolated (not linked in any container),
+     *            or the bahaviour is undefuned!
      */
     if( !node ) return NULL;
 
@@ -566,6 +569,9 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
      *
      * @param self Object instance.
      * @param node The node which is linked in the container.
+     *
+     * @attention The node to be unlinkd must be a member of this container,
+     *            or the behaviour is undefuned!
      */
 }
 //------------------------------------------------------------------------------
