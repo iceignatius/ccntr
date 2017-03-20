@@ -243,13 +243,15 @@ node_t* tree_move_node_parent(node_t *root, node_t *from, node_t *to)
             parent->right = to;
 
         if( to ) to->parent = parent;
-        from->parent = NULL;
     }
     else
     {
         assert( root == from );
         root = to;
+        if( to ) to->parent = NULL;
     }
+
+    from->parent = NULL;
 
     return root;
 }
