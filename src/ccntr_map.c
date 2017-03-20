@@ -275,7 +275,7 @@ node_t* tree_replace_node(node_t *root, node_t *node_old, node_t *node_new)
 }
 //------------------------------------------------------------------------------
 static
-node_t* tree_swap_node_pos(node_t *root, node_t *node1, node_t *node2)
+node_t* tree_swap_node(node_t *root, node_t *node1, node_t *node2)
 {
     assert( root && node1 && node2 );
 
@@ -285,16 +285,6 @@ node_t* tree_swap_node_pos(node_t *root, node_t *node1, node_t *node2)
     root = tree_replace_node(root, &temp, node2);
 
     return root;
-}
-//------------------------------------------------------------------------------
-static
-void tree_swap_node_color(node_t *node1, node_t *node2)
-{
-    assert( node1 && node2 );
-
-    bool temp = node1->is_red;
-    node1->is_red = node2->is_red;
-    node2->is_red = temp;
 }
 //------------------------------------------------------------------------------
 static
@@ -727,8 +717,7 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
     if( node_have_full_child(node) )
     {
         node_t *nearest = node_get_rightmost_child(node->left);
-        self->root = tree_swap_node_pos(self->root, node, nearest);
-        tree_swap_node_color(node, nearest);
+        self->root = tree_swap_node(self->root, node, nearest);
     }
 
     // Unlink the node, and use its child to replace the position.
