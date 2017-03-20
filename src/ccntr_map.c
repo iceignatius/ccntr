@@ -400,6 +400,112 @@ node_t* tree_insert_adjust(node_t *root, node_t *node)
     return root;
 }
 //------------------------------------------------------------------------------
+static
+node_t* tree_erase_adjust_case_brother_child_red_inner(node_t *root, node_t *parent, node_t *node)
+{
+    node_t *brother = node_get_brother(node, parent);
+    assert( brother );
+
+    node_t *broleft  = brother->left;
+    node_t *broright = brother->right;
+
+    if( node == parent->left &&
+        node_is_black(brother) &&
+        node_is_red(broleft) &&
+        node_is_black(broright) )
+    {
+        brother->is_red = true;
+        broleft->is_red = false;
+        root = tree_rotate_node_right(root, brother);
+    }
+    else if( node == parent->right &&
+             node_is_black(brother) &&
+             node_is_black(broleft) &&
+             node_is_red(broright) )
+    {
+        brother ->is_red = true;
+        broright->is_red = false;
+        root = tree_rotate_node_left(root, brother);
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_erase_adjust_case_brother_child_red_outer(node_t *root, node_t *parent, node_t *node)
+{
+    node_t *brother = node_get_brother(node, parent);
+    assert( brother );
+
+    node_t *broleft  = brother->left;
+    node_t *broright = brother->right;
+
+    brother->is_red = parent->is_red;
+    parent ->is_red = false;
+
+    if( node == parent->left )
+    {
+        assert( broright );
+        broright->is_red = false;
+        root = tree_rotate_node_left(root, parent);
+    }
+    else
+    {
+        assert( broleft );
+        broleft->is_red = false;
+        root = tree_rotate_node_right(root, parent);
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_erase_adjust(node_t *root, node_t *parent, node_t *node)
+{
+    if( !parent ) return root;
+
+    node_t *brother = node_get_brother(node, parent);
+
+    if( node_is_red(brother) )
+    {
+        parent ->is_red = true;
+        brother->is_red = false;
+        if( node == parent->left )
+            root = tree_rotate_node_left(root, parent);
+        else
+            root = tree_rotate_node_right(root, parent);
+    }
+
+    brother = node_get_brother(node, parent);
+    node_t *broleft  = brother ? brother->left  : NULL;
+    node_t *broright = brother ? brother->right : NULL;
+    assert( brother );
+
+    if( node_is_black(parent) &&
+        node_is_black(brother) &&
+        node_is_black(broleft) &&
+        node_is_black(broright) )
+    {
+        brother->is_red = true;
+        root = tree_erase_adjust(root, parent->parent, parent);
+    }
+    else if( node_is_red(parent) &&
+             node_is_black(brother) &&
+             node_is_black(broleft) &&
+             node_is_black(broright) )
+    {
+        brother->is_red = true;
+        parent ->is_red = false;;
+    }
+    else
+    {
+        root = tree_erase_adjust_case_brother_child_red_inner(root, parent, node);
+        root = tree_erase_adjust_case_brother_child_red_outer(root, parent, node);
+    }
+
+    return root;
+}
+//------------------------------------------------------------------------------
 //---- Node Visit (In Order) ---------------------------------------------------
 //------------------------------------------------------------------------------
 static
@@ -721,10 +827,23 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
     }
 
     // Unlink the node, and use its child to replace the position.
-    node_t *child = node->left ? node->left : node->right;
+    node_t *parent = node->parent;
+    node_t *child  = node->left ? node->left : node->right;
     self->root = tree_move_node_parent(self->root, node, child);
 
-#warning Nodes adjust not implemented!
+    // Nodes adjust.
+    if( node_is_red(node) )
+    {
+        // Nothing to do.
+    }
+    else if( node_is_red(child) )
+    {
+        child->is_red = false;
+    }
+    else
+    {
+        self->root = tree_erase_adjust(self->root, parent, child);
+    }
 
     assert( self->count );
     -- self->count;
