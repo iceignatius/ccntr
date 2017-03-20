@@ -19,13 +19,6 @@ void node_reset(node_t *node)
 //---- Node Characteristics ----------------------------------------------------
 //------------------------------------------------------------------------------
 static
-bool node_is_isolated(const node_t *node)
-{
-    assert( node );
-    return !node->parent && !node->left && !node->right;
-}
-//------------------------------------------------------------------------------
-static
 bool node_is_black(node_t *node)
 {
     return !node || !node->is_red;
