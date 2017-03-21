@@ -15,8 +15,7 @@
 extern "C" {
 #endif
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_MAP_ENABLED
+#ifdef CCNTR_MAN_MAP_ENABLED
 
 /**
  * @class ccntr_man_map_iter_t
@@ -44,8 +43,8 @@ void* ccntr_man_map_iter_get_value(ccntr_man_map_iter_t *self);
  */
 typedef struct ccntr_man_map_citer_t
 {
-    struct ccntr_man_map_t *container;
-    ccntr_map_node_t       *node;
+    const struct ccntr_man_map_t *container;
+    const ccntr_map_node_t       *node;
 } ccntr_man_map_citer_t;
 
 void ccntr_man_map_citer_init(ccntr_man_map_citer_t        *self,
@@ -112,8 +111,7 @@ void ccntr_man_map_clear(ccntr_man_map_t *self);
 
 void* ccntr_man_map_pop(ccntr_man_map_t *self, ccntr_man_map_iter_t *pos);
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_MAP_ENABLED
+#endif  // CCNTR_MAN_MAP_ENABLED
 
 #ifdef __cplusplus
 }  // extern "C"

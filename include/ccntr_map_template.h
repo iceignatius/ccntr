@@ -10,8 +10,7 @@
 
 #include "ccntr_man_map.h"
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_MAP_ENABLED
+#ifdef CCNTR_MAN_MAP_ENABLED
 
 #define CCNTR_DECLARE_MAP(clsname, keytype, valtype, compare, release_key, release_value) \
                                                                                 \
@@ -209,7 +208,6 @@ valtype clsname##_pop(clsname##_t *self, clsname##_iter_t *pos)                 
     return (valtype) ccntr_man_map_pop(&self->super, &pos->super);              \
 }
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_MAP_ENABLED
+#endif  // CCNTR_MAN_MAP_ENABLED
 
 #endif
