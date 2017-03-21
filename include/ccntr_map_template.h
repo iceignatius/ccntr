@@ -49,9 +49,9 @@ void clsname##_iter_move_next(clsname##_iter_t *self)                           
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-const keytype clsname##_iter_get_key(const clsname##_iter_t *self)              \
+keytype clsname##_iter_get_key(clsname##_iter_t *self)                          \
 {                                                                               \
-    return (const keytype) ccntr_man_map_iter_get_key(&self->super);            \
+    return (keytype) ccntr_man_map_iter_get_key(&self->super);                  \
 }                                                                               \
                                                                                 \
 static inline                                                                   \

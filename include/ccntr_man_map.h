@@ -35,7 +35,7 @@ void ccntr_man_map_iter_init(ccntr_man_map_iter_t   *self,
 bool ccntr_man_map_iter_have_value(const ccntr_man_map_iter_t *self);
 void ccntr_man_map_iter_move_prev(ccntr_man_map_iter_t *self);
 void ccntr_man_map_iter_move_next(ccntr_man_map_iter_t *self);
-const void* ccntr_man_map_iter_get_key(const ccntr_man_map_iter_t *self);
+void* ccntr_man_map_iter_get_key(ccntr_man_map_iter_t *self);
 void* ccntr_man_map_iter_get_value(ccntr_man_map_iter_t *self);
 
 /**

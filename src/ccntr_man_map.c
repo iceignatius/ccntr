@@ -45,7 +45,7 @@ void ccntr_man_map_iter_move_next(ccntr_man_map_iter_t *self)
      */
 }
 //------------------------------------------------------------------------------
-const void* ccntr_man_map_iter_get_key(const ccntr_man_map_iter_t *self)
+void* ccntr_man_map_iter_get_key(ccntr_man_map_iter_t *self)
 {
     /**
      * @memberof ccntr_man_map_iter_t
@@ -53,6 +53,11 @@ const void* ccntr_man_map_iter_get_key(const ccntr_man_map_iter_t *self)
      *
      * @param self Object instance.
      * @return The key be pointed by the iterator.
+     *
+     * @attention Do NOT modify the key directly, except
+     *            the key (and value) has already be popped from the container.
+     *            If you want to modify a key in the container,
+     *            you will be need to erase or pop it, then modify it, then insert again.
      */
 }
 //------------------------------------------------------------------------------
