@@ -23,6 +23,13 @@ typedef struct clsname##_iter_t                                                 
 } clsname##_iter_t;                                                             \
                                                                                 \
 static inline                                                                   \
+clsname##_iter_t clsname##_iter_init(ccntr_man_list_iter_t src)                 \
+{                                                                               \
+    clsname##_iter_t iter = {src};                                              \
+    return iter;                                                                \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
 bool clsname##_iter_have_value(const clsname##_iter_t *self)                    \
 {                                                                               \
     return ccntr_man_list_iter_have_value(&self->super);                        \
@@ -53,6 +60,13 @@ typedef struct clsname##_citer_t                                                
 {                                                                               \
     ccntr_man_list_citer_t super;                                               \
 } clsname##_citer_t;                                                            \
+                                                                                \
+static inline                                                                   \
+clsname##_citer_t clsname##_citer_init(ccntr_man_list_citer_t src)              \
+{                                                                               \
+    clsname##_citer_t iter = {src};                                             \
+    return iter;                                                                \
+}                                                                               \
                                                                                 \
 static inline                                                                   \
 bool clsname##_citer_have_value(const clsname##_citer_t *self)                  \
@@ -107,37 +121,25 @@ unsigned clsname##_get_count(const clsname##_t *self)                           
 static inline                                                                   \
 clsname##_iter_t clsname##_get_first(clsname##_t *self)                         \
 {                                                                               \
-    clsname##_iter_t iter;                                                      \
-    iter.super = ccntr_man_list_get_first(&self->super);                        \
-                                                                                \
-    return iter;                                                                \
+    return clsname##_iter_init(ccntr_man_list_get_first(&self->super));         \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
 clsname##_citer_t clsname##_get_first_c(const clsname##_t *self)                \
 {                                                                               \
-    clsname##_citer_t iter;                                                     \
-    iter.super = ccntr_man_list_get_first_c(&self->super);                      \
-                                                                                \
-    return iter;                                                                \
+    return clsname##_citer_init(ccntr_man_list_get_first_c(&self->super));      \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
 clsname##_iter_t clsname##_get_last(clsname##_t *self)                          \
 {                                                                               \
-    clsname##_iter_t iter;                                                      \
-    iter.super = ccntr_man_list_get_last(&self->super);                         \
-                                                                                \
-    return iter;                                                                \
+    return clsname##_iter_init(ccntr_man_list_get_last(&self->super));          \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
 clsname##_citer_t clsname##_get_last_c(const clsname##_t *self)                 \
 {                                                                               \
-    clsname##_citer_t iter;                                                     \
-    iter.super = ccntr_man_list_get_last_c(&self->super);                       \
-                                                                                \
-    return iter;                                                                \
+    return clsname##_citer_init(ccntr_man_list_get_last_c(&self->super));       \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
