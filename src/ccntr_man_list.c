@@ -95,7 +95,7 @@ void ccntr_man_list_init(ccntr_man_list_t               *self,
      * @param release_value Callback to release contained values,
      *                      and can be NULL to do nothing.
      *
-     * @remarks Object must be initialised (and once only) before using.
+     * @attention Object must be initialised (and once only) before using.
      */
     ccntr_list_init(&self->super);
 
@@ -110,8 +110,8 @@ void ccntr_man_list_destroy(ccntr_man_list_t *self)
      *
      * @param self Object instance.
      *
-     * @remarks Object must be destructed to finish using,
-     *          and must not make any operation to the object after it be destructed.
+     * @attention Object must be destructed to finish using,
+     *            and must not make any operation to the object after it be destructed.
      */
     ccntr_man_list_clear(self);
 }

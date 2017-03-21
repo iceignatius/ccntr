@@ -153,7 +153,7 @@ void ccntr_man_map_init(ccntr_man_map_t              *self,
      * @param release_value Callback to release contained values,
      *                      and can be NULL to do nothing.
      *
-     * @remarks Object must be initialised (and once only) before using.
+     * @attention Object must be initialised (and once only) before using.
      */
 }
 //------------------------------------------------------------------------------
@@ -165,8 +165,8 @@ void ccntr_man_map_destroy(ccntr_man_map_t *self)
      *
      * @param self Object instance.
      *
-     * @remarks Object must be destructed to finish using,
-     *          and must not make any operation to the object after it be destructed.
+     * @attention Object must be destructed to finish using,
+     *            and must not make any operation to the object after it be destructed.
      */
 }
 //------------------------------------------------------------------------------
