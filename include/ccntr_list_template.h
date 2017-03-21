@@ -185,9 +185,9 @@ void clsname##_clear(clsname##_t *self)                                         
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-valtype clsname##_unlink(clsname##_t *self, clsname##_iter_t *pos)              \
+valtype clsname##_pop(clsname##_t *self, clsname##_iter_t *pos)                 \
 {                                                                               \
-    return (valtype) ccntr_man_list_unlink(&self->super, &pos->super);          \
+    return (valtype) ccntr_man_list_pop(&self->super, &pos->super);             \
 }
 
 #endif  // CCNTR_MAN_LIST_ENABLED

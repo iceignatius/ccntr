@@ -237,11 +237,11 @@ void ccntr_man_list_clear(ccntr_man_list_t *self)
     ccntr_list_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
-void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
+void* ccntr_man_list_pop(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
 {
     /**
      * @memberof ccntr_man_list_t
-     * @brief Remove value from container.
+     * @brief Pop value from container.
      * @details Similarly to ccntr_man_list_t::ccntr_man_list_erase,
      *          but just remove the value from container,
      *          and will not release the value.
