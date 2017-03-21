@@ -104,28 +104,28 @@ void man_list_insert_test(void **state)
     {
         int target[] = { 4 };
 
-        list_push_last(list, ele_4);
+        list_insert_last(list, ele_4);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 4, 5 };
 
-        list_push_last(list, ele_5);
+        list_insert_last(list, ele_5);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 2, 4, 5 };
 
-        list_push_first(list, ele_2);
+        list_insert_first(list, ele_2);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 1, 2, 4, 5 };
 
-        list_push_first(list, ele_1);
+        list_insert_first(list, ele_1);
         assert_true( compare_list(list, target) );
     }
 
@@ -154,14 +154,14 @@ void man_list_erase_test(void **state)
     {
         int target[] = { 2, 3, 4, 5 };
 
-        list_pop_first(list);
+        list_erase_first(list);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 2, 3, 4 };
 
-        list_pop_last(list);
+        list_erase_last(list);
         assert_true( compare_list(list, target) );
     }
 

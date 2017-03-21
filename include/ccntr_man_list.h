@@ -243,14 +243,15 @@ ccntr_man_list_citer_t ccntr_man_list_get_last_c(const ccntr_man_list_t *self)
     return iter;
 }
 
-void ccntr_man_list_push_first(ccntr_man_list_t *self, void *value);
-void ccntr_man_list_push_last (ccntr_man_list_t *self, void *value);
-void ccntr_man_list_pop_first (ccntr_man_list_t *self);
-void ccntr_man_list_pop_last  (ccntr_man_list_t *self);
+void ccntr_man_list_insert      (ccntr_man_list_t *self, ccntr_man_list_iter_t *pos, void *value);
+void ccntr_man_list_insert_first(ccntr_man_list_t *self, void *value);
+void ccntr_man_list_insert_last (ccntr_man_list_t *self, void *value);
 
-void ccntr_man_list_insert(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos, void *value);
-void ccntr_man_list_erase (ccntr_man_list_t *self, ccntr_man_list_iter_t *pos);
-void ccntr_man_list_clear (ccntr_man_list_t *self);
+void ccntr_man_list_erase      (ccntr_man_list_t *self, ccntr_man_list_iter_t *pos);
+void ccntr_man_list_erase_first(ccntr_man_list_t *self);
+void ccntr_man_list_erase_last (ccntr_man_list_t *self);
+
+void ccntr_man_list_clear(ccntr_man_list_t *self);
 
 void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos);
 

@@ -116,68 +116,6 @@ void ccntr_man_list_destroy(ccntr_man_list_t *self)
     ccntr_man_list_clear(self);
 }
 //------------------------------------------------------------------------------
-void ccntr_man_list_push_first(ccntr_man_list_t *self, void *value)
-{
-    /**
-     * @memberof ccntr_man_list_t
-     * @brief Push value to the first position.
-     *
-     * @param self  Object instance.
-     * @param value The value to be added.
-     */
-    element_t *ele = element_create(value);
-
-    ccntr_list_link_first(&self->super, &ele->node);
-}
-//------------------------------------------------------------------------------
-void ccntr_man_list_push_last(ccntr_man_list_t *self, void *value)
-{
-    /**
-     * @memberof ccntr_man_list_t
-     * @brief Push value to the last position.
-     *
-     * @param self  Object instance.
-     * @param value The value to be added.
-     */
-    element_t *ele = element_create(value);
-
-    ccntr_list_link_last(&self->super, &ele->node);
-}
-//------------------------------------------------------------------------------
-void ccntr_man_list_pop_first(ccntr_man_list_t *self)
-{
-    /**
-     * @memberof ccntr_man_list_t
-     * @brief Pop value at the first position.
-     *
-     * @param self Object instance.
-     */
-    node_t *node = ccntr_list_get_first(&self->super);
-    if( !node ) return;
-
-    ccntr_list_unlink(&self->super, node);
-
-    element_t *ele = container_of(node, element_t, node);
-    element_release(ele, self->release_value);
-}
-//------------------------------------------------------------------------------
-void ccntr_man_list_pop_last(ccntr_man_list_t *self)
-{
-    /**
-     * @memberof ccntr_man_list_t
-     * @brief Pop value at the last position.
-     *
-     * @param self Object instance.
-     */
-    node_t *node = ccntr_list_get_last(&self->super);
-    if( !node ) return;
-
-    ccntr_list_unlink(&self->super, node);
-
-    element_t *ele = container_of(node, element_t, node);
-    element_release(ele, self->release_value);
-}
-//------------------------------------------------------------------------------
 void ccntr_man_list_insert(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos, void *value)
 {
     /**
@@ -196,6 +134,34 @@ void ccntr_man_list_insert(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos, v
     ccntr_list_link(&self->super, pos->node, &ele->node);
 }
 //------------------------------------------------------------------------------
+void ccntr_man_list_insert_first(ccntr_man_list_t *self, void *value)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Insert a value to the first position.
+     *
+     * @param self  Object instance.
+     * @param value The value to be added.
+     */
+    element_t *ele = element_create(value);
+
+    ccntr_list_link_first(&self->super, &ele->node);
+}
+//------------------------------------------------------------------------------
+void ccntr_man_list_insert_last(ccntr_man_list_t *self, void *value)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Insert a value to the last position.
+     *
+     * @param self  Object instance.
+     * @param value The value to be added.
+     */
+    element_t *ele = element_create(value);
+
+    ccntr_list_link_last(&self->super, &ele->node);
+}
+//------------------------------------------------------------------------------
 void ccntr_man_list_erase(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
 {
     /**
@@ -209,6 +175,40 @@ void ccntr_man_list_erase(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
         abort_message("ERROR: Operator iterator with different container!\n");
 
     node_t *node = pos->node;
+    if( !node ) return;
+
+    ccntr_list_unlink(&self->super, node);
+
+    element_t *ele = container_of(node, element_t, node);
+    element_release(ele, self->release_value);
+}
+//------------------------------------------------------------------------------
+void ccntr_man_list_erase_first(ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Erase value at the first position.
+     *
+     * @param self Object instance.
+     */
+    node_t *node = ccntr_list_get_first(&self->super);
+    if( !node ) return;
+
+    ccntr_list_unlink(&self->super, node);
+
+    element_t *ele = container_of(node, element_t, node);
+    element_release(ele, self->release_value);
+}
+//------------------------------------------------------------------------------
+void ccntr_man_list_erase_last(ccntr_man_list_t *self)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Erase value at the last position.
+     *
+     * @param self Object instance.
+     */
+    node_t *node = ccntr_list_get_last(&self->super);
     if( !node ) return;
 
     ccntr_list_unlink(&self->super, node);

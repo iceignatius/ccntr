@@ -143,39 +143,39 @@ clsname##_citer_t clsname##_get_last_c(const clsname##_t *self)                 
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-void clsname##_push_first(clsname##_t *self, valtype value)                     \
-{                                                                               \
-    ccntr_man_list_push_first(&self->super, (void*) value);                     \
-}                                                                               \
-                                                                                \
-static inline                                                                   \
-void clsname##_push_last(clsname##_t *self, valtype value)                      \
-{                                                                               \
-    ccntr_man_list_push_last(&self->super, (void*) value);                      \
-}                                                                               \
-                                                                                \
-static inline                                                                   \
-void clsname##_pop_first(clsname##_t *self)                                     \
-{                                                                               \
-    ccntr_man_list_pop_first(&self->super);                                     \
-}                                                                               \
-                                                                                \
-static inline                                                                   \
-void clsname##_pop_last(clsname##_t *self)                                      \
-{                                                                               \
-    ccntr_man_list_pop_last(&self->super);                                      \
-}                                                                               \
-                                                                                \
-static inline                                                                   \
 void clsname##_insert(clsname##_t *self, clsname##_iter_t *pos, valtype value)  \
 {                                                                               \
     ccntr_man_list_insert(&self->super, &pos->super, (void*)value);             \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
+void clsname##_insert_first(clsname##_t *self, valtype value)                   \
+{                                                                               \
+    ccntr_man_list_insert_first(&self->super, (void*) value);                   \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+void clsname##_insert_last(clsname##_t *self, valtype value)                    \
+{                                                                               \
+    ccntr_man_list_insert_last(&self->super, (void*) value);                    \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
 void clsname##_erase(clsname##_t *self, clsname##_iter_t *pos)                  \
 {                                                                               \
     ccntr_man_list_erase(&self->super, &pos->super);                            \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+void clsname##_erase_first(clsname##_t *self)                                   \
+{                                                                               \
+    ccntr_man_list_erase_first(&self->super);                                   \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+void clsname##_erase_last(clsname##_t *self)                                    \
+{                                                                               \
+    ccntr_man_list_erase_last(&self->super);                                    \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
