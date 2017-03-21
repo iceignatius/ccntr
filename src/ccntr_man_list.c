@@ -116,21 +116,7 @@ void ccntr_man_list_destroy(ccntr_man_list_t *self)
     ccntr_man_list_clear(self);
 }
 //------------------------------------------------------------------------------
-void ccntr_man_list_push_front(ccntr_man_list_t *self, void *value)
-{
-    /**
-     * @memberof ccntr_man_list_t
-     * @brief Push value to the last position.
-     *
-     * @param self  Object instance.
-     * @param value The value to be added.
-     */
-    element_t *ele = element_create(value);
-
-    ccntr_list_link_front(&self->super, &ele->node);
-}
-//------------------------------------------------------------------------------
-void ccntr_man_list_push_back(ccntr_man_list_t *self, void *value)
+void ccntr_man_list_push_first(ccntr_man_list_t *self, void *value)
 {
     /**
      * @memberof ccntr_man_list_t
@@ -141,7 +127,21 @@ void ccntr_man_list_push_back(ccntr_man_list_t *self, void *value)
      */
     element_t *ele = element_create(value);
 
-    ccntr_list_link_back(&self->super, &ele->node);
+    ccntr_list_link_first(&self->super, &ele->node);
+}
+//------------------------------------------------------------------------------
+void ccntr_man_list_push_last(ccntr_man_list_t *self, void *value)
+{
+    /**
+     * @memberof ccntr_man_list_t
+     * @brief Push value to the last position.
+     *
+     * @param self  Object instance.
+     * @param value The value to be added.
+     */
+    element_t *ele = element_create(value);
+
+    ccntr_list_link_last(&self->super, &ele->node);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_list_pop_first(ccntr_man_list_t *self)
@@ -248,7 +248,7 @@ void* ccntr_man_list_unlink(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
      *
      * @param self Object instance.
      * @param pos  Position of the value.
-     * @return The value.
+     * @return The value be removed form container.
      */
     if( pos->container != self )
         abort_message("ERROR: Operator iterator with different container!\n");

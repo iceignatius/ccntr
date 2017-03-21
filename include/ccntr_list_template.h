@@ -143,15 +143,15 @@ clsname##_citer_t clsname##_get_last_c(const clsname##_t *self)                 
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-void clsname##_push_front(clsname##_t *self, valtype value)                     \
+void clsname##_push_first(clsname##_t *self, valtype value)                     \
 {                                                                               \
-    ccntr_man_list_push_front(&self->super, (void*) value);                     \
+    ccntr_man_list_push_first(&self->super, (void*) value);                     \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-void clsname##_push_back(clsname##_t *self, valtype value)                      \
+void clsname##_push_last(clsname##_t *self, valtype value)                      \
 {                                                                               \
-    ccntr_man_list_push_back(&self->super, (void*) value);                      \
+    ccntr_man_list_push_last(&self->super, (void*) value);                      \
 }                                                                               \
                                                                                 \
 static inline                                                                   \

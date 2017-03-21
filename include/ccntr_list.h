@@ -118,7 +118,7 @@ void ccntr_list_link  (ccntr_list_t *self, ccntr_list_node_t *pos, ccntr_list_no
 void ccntr_list_unlink(ccntr_list_t *self, ccntr_list_node_t *node);
 
 static inline
-void ccntr_list_link_front(ccntr_list_t *self, ccntr_list_node_t *node)
+void ccntr_list_link_first(ccntr_list_t *self, ccntr_list_node_t *node)
 {
     /**
      * @memberof ccntr_list_t
@@ -131,7 +131,7 @@ void ccntr_list_link_front(ccntr_list_t *self, ccntr_list_node_t *node)
 }
 
 static inline
-void ccntr_list_link_back(ccntr_list_t *self, ccntr_list_node_t *node)
+void ccntr_list_link_last(ccntr_list_t *self, ccntr_list_node_t *node)
 {
     /**
      * @memberof ccntr_list_t

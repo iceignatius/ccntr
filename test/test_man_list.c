@@ -104,28 +104,28 @@ void man_list_insert_test(void **state)
     {
         int target[] = { 4 };
 
-        list_push_back(list, ele_4);
+        list_push_last(list, ele_4);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 4, 5 };
 
-        list_push_back(list, ele_5);
+        list_push_last(list, ele_5);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 2, 4, 5 };
 
-        list_push_front(list, ele_2);
+        list_push_first(list, ele_2);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 1, 2, 4, 5 };
 
-        list_push_front(list, ele_1);
+        list_push_first(list, ele_1);
         assert_true( compare_list(list, target) );
     }
 

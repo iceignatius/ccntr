@@ -103,28 +103,28 @@ void list_insert_test(void **state)
     {
         int target[] = { 4 };
 
-        ccntr_list_link_back(list, &ele_4->node);
+        ccntr_list_link_last(list, &ele_4->node);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 4, 5 };
 
-        ccntr_list_link_back(list, &ele_5->node);
+        ccntr_list_link_last(list, &ele_5->node);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 2, 4, 5 };
 
-        ccntr_list_link_front(list, &ele_2->node);
+        ccntr_list_link_first(list, &ele_2->node);
         assert_true( compare_list(list, target) );
     }
 
     {
         int target[] = { 1, 2, 4, 5 };
 
-        ccntr_list_link_front(list, &ele_1->node);
+        ccntr_list_link_first(list, &ele_1->node);
         assert_true( compare_list(list, target) );
     }
 
