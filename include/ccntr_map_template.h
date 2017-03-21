@@ -100,7 +100,7 @@ const keytype clsname##_citer_get_key(const clsname##_citer_t *self)            
 }                                                                               \
                                                                                 \
 static inline                                                                   \
-const valtype clsname##_citer_(const clsname##_citer_t *self)                   \
+const valtype clsname##_citer_get_value(const clsname##_citer_t *self)          \
 {                                                                               \
     return (const valtype) ccntr_man_map_citer_get_value(&self->super);         \
 }                                                                               \
@@ -176,7 +176,7 @@ valtype clsname##_find_value(clsname##_t *self, const keytype key)              
 static inline                                                                   \
 const valtype clsname##_find_value_c(const clsname##_t *self, const keytype key) \
 {                                                                               \
-    return (const valtype) ccntr_man_map_find_calue_c(&self->super, (const void*)key); \
+    return (const valtype) ccntr_man_map_find_value_c(&self->super, (const void*)key); \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
