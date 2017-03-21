@@ -12,7 +12,7 @@
 
 #ifdef CCNTR_MAN_LIST_ENABLED
 
-#define CCNTR_DECLARE_LIST(clsname, valtype, on_value_release)                  \
+#define CCNTR_DECLARE_LIST(clsname, valtype, release_value)                     \
                                                                                 \
                                                                                 \
                                                                                 \
@@ -89,7 +89,7 @@ typedef struct clsname##_t                                                      
 static inline                                                                   \
 void clsname##_init(clsname##_t *self)                                          \
 {                                                                               \
-    ccntr_man_list_init(&self->super, on_value_release);                        \
+    ccntr_man_list_init(&self->super, release_value);                           \
 }                                                                               \
                                                                                 \
 static inline                                                                   \
