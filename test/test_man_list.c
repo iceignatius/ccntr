@@ -70,6 +70,8 @@ static
 int man_list_create(void **state)
 {
     list_t *list = malloc(sizeof(*list));
+    if( !list ) return -1;
+
     list_init(list);
 
     *state = list;
