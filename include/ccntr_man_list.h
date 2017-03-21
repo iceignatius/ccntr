@@ -147,7 +147,7 @@ const void* ccntr_man_list_citer_get_value(const ccntr_man_list_citer_t *self);
 typedef void(*ccntr_man_list_release_value_t)(void *value);
 
 /**
- * @class ccntr_list_t
+ * @class ccntr_man_list_t
  * @brief Linked list container.
  */
 typedef struct ccntr_man_list_t
