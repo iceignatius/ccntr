@@ -7,6 +7,7 @@ project(ccntr_library)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_list.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_list.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_map.c)
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_map.c)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})

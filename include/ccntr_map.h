@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief     Container: map.
+ * @brief     Container: key map.
  * @author    王文佑
  * @date      2017/03/13
  * @copyright ZLib Licence
@@ -17,7 +17,7 @@ extern "C" {
 
 /**
  * @class ccntr_map_node_t
- * @brief Node of map.
+ * @brief Node of key map.
  */
 typedef struct ccntr_map_node_t
 {
@@ -80,7 +80,7 @@ typedef int(*ccntr_map_compare_keys_t)(const void *key1, const void *key2);
 
 /**
  * @class ccntr_map_t
- * @brief Map container.
+ * @brief Key map container.
  */
 typedef struct ccntr_map_t
 {

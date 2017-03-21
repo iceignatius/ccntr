@@ -44,6 +44,7 @@ Types of Container
 This library support the following types of container:
 
 * Linked list.
+* Key map.
 
 Examples
 --------
