@@ -192,12 +192,37 @@ void man_list_erase_test(void **state)
 }
 //------------------------------------------------------------------------------
 static
-void man_list_clear_test(void **state)
+void man_list_pop_test(void **state)
 {
     list_t *list = *state;
 
     {
         int target[] = { 2, 4, 5 };
+        assert_true( compare_list(list, target) );
+    }
+
+    {
+        list_iter_t pos = list_get_first(list);
+        list_iter_move_next(&pos);
+        assert_true( list_iter_have_value(&pos) );
+
+        element_t *ele = list_pop(list, &pos);
+        assert_non_null( ele );
+
+        int target[] = { 2, 5 };
+        assert_true( compare_list(list, target) );
+
+        element_release(ele);
+    }
+}
+//------------------------------------------------------------------------------
+static
+void man_list_clear_test(void **state)
+{
+    list_t *list = *state;
+
+    {
+        int target[] = { 2, 5 };
         assert_true( compare_list(list, target) );
     }
 
@@ -213,6 +238,7 @@ int test_man_list(void)
     {
         cmocka_unit_test(man_list_insert_test),
         cmocka_unit_test(man_list_erase_test),
+        cmocka_unit_test(man_list_pop_test),
         cmocka_unit_test(man_list_clear_test),
     };
 
