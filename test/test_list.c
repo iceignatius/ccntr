@@ -70,6 +70,8 @@ static
 int list_create(void **state)
 {
     ccntr_list_t *list = malloc(sizeof(*list));
+    if( !list ) return -1;
+
     ccntr_list_init(list);
 
     *state = list;
