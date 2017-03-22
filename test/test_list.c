@@ -101,37 +101,37 @@ void list_insert_test(void **state)
     element_t *ele_5 = element_create(5);
 
     {
-        int target[] = { 4 };
-
         ccntr_list_link_last(list, &ele_4->node);
+
+        int target[] = { 4 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 4, 5 };
-
         ccntr_list_link_last(list, &ele_5->node);
+
+        int target[] = { 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 2, 4, 5 };
-
         ccntr_list_link_first(list, &ele_2->node);
+
+        int target[] = { 2, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 1, 2, 4, 5 };
-
         ccntr_list_link_first(list, &ele_1->node);
+
+        int target[] = { 1, 2, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 1, 2, 3, 4, 5 };
-
         ccntr_list_link(list, &ele_4->node, &ele_3->node);
+
+        int target[] = { 1, 2, 3, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 }
@@ -147,12 +147,12 @@ void list_erase_test(void **state)
     }
 
     {
-        int target[] = { 2, 3, 4, 5 };
-
         ccntr_list_node_t *node = ccntr_list_get_first(list);
         assert_non_null(node);
 
         ccntr_list_unlink(list, node);
+
+        int target[] = { 2, 3, 4, 5 };
         assert_true( compare_list(list, target) );
 
         element_t *ele = container_of(node, element_t, node);
@@ -160,12 +160,12 @@ void list_erase_test(void **state)
     }
 
     {
-        int target[] = { 2, 3, 4 };
-
         ccntr_list_node_t *node = ccntr_list_get_last(list);
         assert_non_null(node);
 
         ccntr_list_unlink(list, node);
+
+        int target[] = { 2, 3, 4 };
         assert_true( compare_list(list, target) );
 
         element_t *ele = container_of(node, element_t, node);
@@ -173,13 +173,13 @@ void list_erase_test(void **state)
     }
 
     {
-        int target[] = { 2, 4 };
-
         ccntr_list_node_t *node = ccntr_list_get_first(list);
         assert_non_null(node);
         assert_non_null( node = node->next );
 
         ccntr_list_unlink(list, node);
+
+        int target[] = { 2, 4 };
         assert_true( compare_list(list, target) );
 
         element_t *ele = container_of(node, element_t, node);

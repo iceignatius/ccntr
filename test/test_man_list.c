@@ -104,41 +104,41 @@ void man_list_insert_test(void **state)
     element_t *ele_5 = element_create(5);
 
     {
-        int target[] = { 4 };
-
         list_insert_last(list, ele_4);
+
+        int target[] = { 4 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 4, 5 };
-
         list_insert_last(list, ele_5);
+
+        int target[] = { 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 2, 4, 5 };
-
         list_insert_first(list, ele_2);
+
+        int target[] = { 2, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 1, 2, 4, 5 };
-
         list_insert_first(list, ele_1);
+
+        int target[] = { 1, 2, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 1, 2, 3, 4, 5 };
-
         list_iter_t pos = list_get_last(list);
         list_iter_move_prev(&pos);
         assert_true( list_iter_have_value(&pos) );
 
         list_insert(list, &pos, ele_3);
+
+        int target[] = { 1, 2, 3, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 }
@@ -154,27 +154,27 @@ void man_list_erase_test(void **state)
     }
 
     {
-        int target[] = { 2, 3, 4, 5 };
-
         list_erase_first(list);
+
+        int target[] = { 2, 3, 4, 5 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 2, 3, 4 };
-
         list_erase_last(list);
+
+        int target[] = { 2, 3, 4 };
         assert_true( compare_list(list, target) );
     }
 
     {
-        int target[] = { 2, 4 };
-
         list_iter_t pos = list_get_first(list);
         list_iter_move_next(&pos);
         assert_true( list_iter_have_value(&pos) );
 
         list_erase(list, &pos);
+
+        int target[] = { 2, 4 };
         assert_true( compare_list(list, target) );
     }
 
