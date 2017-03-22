@@ -92,15 +92,123 @@ void ccntr_man_map_init(ccntr_man_map_t              *self,
                         ccntr_man_map_release_value_t release_value);
 void ccntr_man_map_destroy(ccntr_man_map_t *self);
 
-unsigned ccntr_man_map_get_count(const ccntr_man_map_t *self);
+static inline
+unsigned ccntr_man_map_get_count(const ccntr_man_map_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Get count of values it contained.
+     *
+     * @param self Object instance.
+     * @return The count of values.
+     */
+    return ccntr_map_get_count(&self->super);
+}
 
-ccntr_man_map_iter_t ccntr_man_map_get_first(ccntr_man_map_t *self);
-ccntr_man_map_citer_t ccntr_man_map_get_first_c(const ccntr_man_map_t *self);
-ccntr_man_map_iter_t ccntr_man_map_get_last(ccntr_man_map_t *self);
-ccntr_man_map_citer_t ccntr_man_map_get_last_c(const ccntr_man_map_t *self);
+static inline
+ccntr_man_map_iter_t ccntr_man_map_get_first(ccntr_man_map_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Get the first value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the first value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_map_iter_t iter;
+    ccntr_man_map_iter_init(&iter, self, ccntr_map_get_first(&self->super));
 
-ccntr_man_map_iter_t ccntr_man_map_find(ccntr_man_map_t *self, const void *key);
-ccntr_man_map_citer_t ccntr_man_map_find_c(const ccntr_man_map_t *self, const void *key);
+    return iter;
+}
+
+static inline
+ccntr_man_map_citer_t ccntr_man_map_get_first_c(const ccntr_man_map_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Get the first value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the first value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_map_citer_t iter;
+    ccntr_man_map_citer_init(&iter, self, ccntr_map_get_first_c(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_iter_t ccntr_man_map_get_last(ccntr_man_map_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Get the last value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the last value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_map_iter_t iter;
+    ccntr_man_map_iter_init(&iter, self, ccntr_map_get_last(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_citer_t ccntr_man_map_get_last_c(const ccntr_man_map_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Get the last value.
+     *
+     * @param self Object instance.
+     * @return An iterator be pointed to the last value,
+     *         or an empty iterator if no any values contained.
+     */
+    ccntr_man_map_citer_t iter;
+    ccntr_man_map_citer_init(&iter, self, ccntr_map_get_last_c(&self->super));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_iter_t ccntr_man_map_find(ccntr_man_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find value by key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_iter_t iter;
+    ccntr_man_map_iter_init(&iter, self, ccntr_map_find(&self->super, key));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_citer_t ccntr_man_map_find_c(const ccntr_man_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find value by key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_citer_t iter;
+    ccntr_man_map_citer_init(&iter, self, ccntr_map_find_c(&self->super, key));
+
+    return iter;
+}
+
 void* ccntr_man_map_find_value(ccntr_man_map_t *self, const void *key);
 const void* ccntr_man_map_find_value_c(const ccntr_man_map_t *self, const void *key);
 
