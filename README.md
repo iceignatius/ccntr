@@ -51,7 +51,7 @@ Examples
 
 The following codes are two examples to show how to use this library.
 We only use linked list type of container as example,
-beacuse the others are similarly.
+but the others are similarly.
 
 ### List Template
 
@@ -67,7 +67,7 @@ beacuse the others are similarly.
 
     element_t* element_create(int value)
     {
-        // Nothing but create and initialise our element object.
+        // Create and initialise our element object.
         element_t *ele = malloc(sizeof(element_t));
         ele->value = value;
         return ele;
@@ -75,14 +75,14 @@ beacuse the others are similarly.
 
     void element_release(element_t *ele)
     {
-        // Nothing but destroy our element object.
+        // Destroy our element object.
         free(ele);
     }
 
     // Use CCNTR_DECLARE_LIST macro to build our list class with
     // class name "mylist", and element type "element_t*".
     // Note that we assign the function "element_release" to the container,
-    // then we will not need to release each element when we pop or erase it
+    // then we will not need to release each element when we erase it
     // from container.
     CCNTR_DECLARE_LIST(mylist, element_t*, (void(*)(void*))element_release)
 
@@ -96,13 +96,13 @@ beacuse the others are similarly.
         // Insert elements.
 
         element_t *ele = element_create(4);
-        mylist_push_back(&list, ele);
+        mylist_insert_last(&list, ele);
 
         ele = element_create(6);
-        mylist_push_back(&list, ele);
+        mylist_insert_last(&list, ele);
 
         ele = element_create(2);
-        mylist_push_back(&list, ele);
+        mylist_insert_first(&list, ele);
 
         // Get container elements.
 
@@ -138,18 +138,18 @@ beacuse the others are similarly.
         // And we chose to set the node as the first member of element,
         // so that the address of node and element will be the same.
         // But it is not necessary to set the node as the first member,
-        // User can use something like "container_of macro"
+        // User can use something like "container_of" macro
         // to get element by node.
         ccntr_list_node_t node;
 
-        // The following variables are user defined members.
+        // The following variables are user defined member(s).
         int value;
 
     } element_t;
 
     element_t* element_create(int value)
     {
-        // Nothing but create and initialise our element object.
+        // Create and initialise our element object.
         element_t *ele = malloc(sizeof(element_t));
         ele->value = value;
         return ele;
@@ -157,7 +157,7 @@ beacuse the others are similarly.
 
     void element_release(element_t *ele)
     {
-        // Nothing but destroy our element object.
+        // Destroy our element object.
         free(ele);
     }
 
@@ -171,13 +171,13 @@ beacuse the others are similarly.
         // Insert elements.
 
         element_t *ele = element_create(4);
-        ccntr_list_link_back(&list, &ele->node);
+        ccntr_list_link_last(&list, &ele->node);
 
         ele = element_create(6);
-        ccntr_list_link_back(&list, &ele->node);
+        ccntr_list_link_last(&list, &ele->node);
 
         ele = element_create(2);
-        ccntr_list_link_front(&list, &ele->node);
+        ccntr_list_link_first(&list, &ele->node);
 
         // Get container elements.
 
