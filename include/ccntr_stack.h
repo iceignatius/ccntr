@@ -29,6 +29,8 @@ typedef struct ccntr_stack_node_t
  */
 typedef struct ccntr_stack_t
 {
+    ccntr_stack_node_t *top;
+    unsigned            count;
 } ccntr_stack_t;
 
 void ccntr_stack_init(ccntr_stack_t *self);

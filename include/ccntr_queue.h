@@ -29,6 +29,9 @@ typedef struct ccntr_queue_node_t
  */
 typedef struct ccntr_queue_t
 {
+    ccntr_queue_node_t *first;
+    ccntr_queue_node_t *last;
+    unsigned            count;
 } ccntr_queue_t;
 
 void ccntr_queue_init(ccntr_queue_t *self);
