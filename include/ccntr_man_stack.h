@@ -15,8 +15,7 @@
 extern "C" {
 #endif
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_STACK_ENABLED
+#ifdef CCNTR_MAN_STACK_ENABLED
 
 /**
  * @brief Release value.
@@ -32,6 +31,10 @@ typedef void(*ccntr_man_stack_release_value_t)(void *value);
  */
 typedef struct ccntr_man_stack_t
 {
+    ccntr_stack_t super;
+
+    ccntr_man_stack_release_value_t release_value;
+
 } ccntr_man_stack_t;
 
 void ccntr_man_stack_init(ccntr_man_stack_t *self, ccntr_man_stack_release_value_t release_value);
@@ -48,8 +51,7 @@ void ccntr_man_stack_erase_current(ccntr_man_stack_t *self);
 
 void ccntr_man_stack_clear(ccntr_man_stack_t *self);
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_STACK_ENABLED
+#endif  // CCNTR_MAN_STACK_ENABLED
 
 #ifdef __cplusplus
 }  // extern "C"
