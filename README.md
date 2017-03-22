@@ -44,6 +44,8 @@ Types of Container
 This library support the following types of container:
 
 * Linked list.
+* Queue (first in, first out list).
+* Stack (last in, first out list).
 * Key map.
 
 Examples

@@ -6,6 +6,8 @@
 
 #if defined(CCNTR_HAVE_MALLOC) && defined(CCNTR_HAVE_FREE)
     #define CCNTR_MAN_LIST_ENABLED
+    #define CCNTR_MAN_QUEUE_ENABLED
+    #define CCNTR_MAN_STACK_ENABLED
     #define CCNTR_MAN_MAP_ENABLED
 #endif
 

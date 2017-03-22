@@ -6,6 +6,10 @@ project(ccntr_library)
 
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_list.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_list.c)
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_queue.c)
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_queue.c)
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_stack.c)
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_stack.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_map.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_map.c)
 
