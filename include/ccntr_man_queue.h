@@ -40,10 +40,34 @@ typedef struct ccntr_man_queue_t
 void ccntr_man_queue_init(ccntr_man_queue_t *self, ccntr_man_queue_release_value_t release_value);
 void ccntr_man_queue_destroy(ccntr_man_queue_t *self);
 
-unsigned ccntr_man_queue_get_count(const ccntr_man_queue_t *self);
+static inline
+unsigned ccntr_man_queue_get_count(const ccntr_man_queue_t *self)
+{
+    /**
+     * @memberof ccntr_man_queue_t
+     * @brief Get count of values it contained.
+     *
+     * @param self Object instance.
+     * @return The count of values.
+     */
+    return ccntr_queue_get_count(&self->super);
+}
 
 void* ccntr_man_queue_get_current(ccntr_man_queue_t *self);
-const void* ccntr_man_queue_get_current_c(const ccntr_man_queue_t *self);
+
+static inline
+const void* ccntr_man_queue_get_current_c(const ccntr_man_queue_t *self)
+{
+    /**
+     * @memberof ccntr_man_queue_t
+     * @brief Get the current value.
+     *
+     * @param self Object instance.
+     * @return The current value;
+     *         or NULL if container is empty.
+     */
+    return ccntr_man_queue_get_current((ccntr_man_queue_t*)self);
+}
 
 void ccntr_man_queue_push(ccntr_man_queue_t *self, void *value);
 void* ccntr_man_queue_pop(ccntr_man_queue_t *self);
