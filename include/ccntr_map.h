@@ -27,7 +27,14 @@ typedef struct ccntr_map_node_t
 
     bool is_red;
 
-    void *key;  ///< The key of the node.
+    /**
+     * Key of the node.
+     *
+     * @attention:
+     * The @a key member need to be set and managed by user manually,
+     * but do not modify it when the node is linked in a container.
+     */
+    void *key;
 
 } ccntr_map_node_t;
 
