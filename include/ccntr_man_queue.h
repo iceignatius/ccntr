@@ -15,8 +15,7 @@
 extern "C" {
 #endif
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_QUEUE_ENABLED
+#ifdef CCNTR_MAN_QUEUE_ENABLED
 
 /**
  * @brief Release value.
@@ -32,6 +31,10 @@ typedef void(*ccntr_man_queue_release_value_t)(void *value);
  */
 typedef struct ccntr_man_queue_t
 {
+    ccntr_queue_t super;
+
+    ccntr_man_queue_release_value_t release_value;
+
 } ccntr_man_queue_t;
 
 void ccntr_man_queue_init(ccntr_man_queue_t *self, ccntr_man_queue_release_value_t release_value);
@@ -48,8 +51,7 @@ void ccntr_man_queue_erase_current(ccntr_man_queue_t *self);
 
 void ccntr_man_queue_clear(ccntr_man_queue_t *self);
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_QUEUE_ENABLED
+#endif  // CCNTR_MAN_QUEUE_ENABLED
 
 #ifdef __cplusplus
 }  // extern "C"

@@ -2,8 +2,7 @@
 #include "abort_message.h"
 #include "ccntr_man_queue.h"
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_QUEUE_ENABLED
+#ifdef CCNTR_MAN_QUEUE_ENABLED
 
 typedef ccntr_queue_node_t node_t;
 
@@ -45,6 +44,12 @@ void* element_release_but_keep_value(element_t *ele)
 //------------------------------------------------------------------------------
 //---- Queue -------------------------------------------------------------------
 //------------------------------------------------------------------------------
+static
+void release_value_default(void *value)
+{
+    // Nothing to do.
+}
+//------------------------------------------------------------------------------
 void ccntr_man_queue_init(ccntr_man_queue_t *self, ccntr_man_queue_release_value_t release_value)
 {
     /**
@@ -57,6 +62,9 @@ void ccntr_man_queue_init(ccntr_man_queue_t *self, ccntr_man_queue_release_value
      *
      * @attention Object must be initialised (and once only) before using.
      */
+    ccntr_queue_init(&self->super);
+
+    self->release_value = release_value ? release_value : release_value_default;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_queue_destroy(ccntr_man_queue_t *self)
@@ -70,6 +78,7 @@ void ccntr_man_queue_destroy(ccntr_man_queue_t *self)
      * @attention Object must be destructed to finish using,
      *            and must not make any operation to the object after it be destructed.
      */
+    ccntr_man_queue_clear(self);
 }
 //------------------------------------------------------------------------------
 unsigned ccntr_man_queue_get_count(const ccntr_man_queue_t *self)
@@ -81,6 +90,7 @@ unsigned ccntr_man_queue_get_count(const ccntr_man_queue_t *self)
      * @param self Object instance.
      * @return The count of values.
      */
+    return ccntr_queue_get_count(&self->super);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_queue_get_current(ccntr_man_queue_t *self)
@@ -93,6 +103,11 @@ void* ccntr_man_queue_get_current(ccntr_man_queue_t *self)
      * @return The current value;
      *         or NULL if container is empty.
      */
+    node_t *node = ccntr_queue_get_current(&self->super);
+    if( !node ) return NULL;
+
+    element_t *ele = container_of(node, element_t, node);
+    return ele->value;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_queue_get_current_c(const ccntr_man_queue_t *self)
@@ -105,6 +120,7 @@ const void* ccntr_man_queue_get_current_c(const ccntr_man_queue_t *self)
      * @return The current value;
      *         or NULL if container is empty.
      */
+    return ccntr_man_queue_get_current((ccntr_man_queue_t*)self);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_queue_push(ccntr_man_queue_t *self, void *value)
@@ -116,6 +132,9 @@ void ccntr_man_queue_push(ccntr_man_queue_t *self, void *value)
      * @param self  Object instance.
      * @param value The new value to be added.
      */
+    element_t *ele = element_create(value);
+
+    ccntr_queue_link(&self->super, &ele->node);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_queue_pop(ccntr_man_queue_t *self)
@@ -131,6 +150,11 @@ void* ccntr_man_queue_pop(ccntr_man_queue_t *self)
      * @remarks The value returned will not be released by container,
      *          and that means user will be responsible for that.
      */
+    node_t *node = ccntr_queue_unlink(&self->super);
+    if( !node ) return NULL;
+
+    element_t *ele = container_of(node, element_t, node);
+    return element_release_but_keep_value(ele);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_queue_erase_current(ccntr_man_queue_t *self)
@@ -141,6 +165,11 @@ void ccntr_man_queue_erase_current(ccntr_man_queue_t *self)
      *
      * @param self Object instance.
      */
+    node_t *node = ccntr_queue_unlink(&self->super);
+    if( !node ) return;
+
+    element_t *ele = container_of(node, element_t, node);
+    element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_queue_clear(ccntr_man_queue_t *self)
@@ -151,8 +180,17 @@ void ccntr_man_queue_clear(ccntr_man_queue_t *self)
      *
      * @param self Object instance.
      */
+    node_t *node = ccntr_queue_get_current(&self->super);
+    while( node )
+    {
+        element_t *ele = container_of(node, element_t, node);
+        node = node->next;
+
+        element_release(ele, self->release_value);
+    }
+
+    ccntr_queue_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_QUEUE_ENABLED
+#endif  // CCNTR_MAN_QUEUE_ENABLED

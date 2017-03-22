@@ -10,8 +10,7 @@
 
 #include "ccntr_man_queue.h"
 
-#warning Temporary hide!
-//#ifdef CCNTR_MAN_QUEUE_ENABLED
+#ifdef CCNTR_MAN_QUEUE_ENABLED
 
 #define CCNTR_DECLARE_QUEUE(clsname, valtype, release_value)                    \
                                                                                 \
@@ -77,7 +76,6 @@ void clsname##_clear(clsname##_t *self)                                         
     ccntr_man_queue_clear(&self->super);                                        \
 }
 
-#warning Temporary hide!
-//#endif  // CCNTR_MAN_QUEUE_ENABLED
+#endif  // CCNTR_MAN_QUEUE_ENABLED
 
 #endif
