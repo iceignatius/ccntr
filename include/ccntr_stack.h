@@ -35,8 +35,8 @@ void ccntr_stack_init(ccntr_stack_t *self);
 
 unsigned ccntr_stack_get_count(const ccntr_stack_t *self);
 
-ccntr_stack_node_t* ccntr_stack_get_node(ccntr_stack_t *self);
-const ccntr_stack_node_t* ccntr_stack_get_node_c(const ccntr_stack_t *self);
+ccntr_stack_node_t* ccntr_stack_get_current(ccntr_stack_t *self);
+const ccntr_stack_node_t* ccntr_stack_get_current_c(const ccntr_stack_t *self);
 
 void ccntr_stack_link(ccntr_stack_t *self, ccntr_stack_node_t *node);
 ccntr_stack_node_t* ccntr_stack_unlink(ccntr_stack_t *self);

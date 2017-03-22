@@ -35,8 +35,8 @@ void ccntr_queue_init(ccntr_queue_t *self);
 
 unsigned ccntr_queue_get_count(const ccntr_queue_t *self);
 
-ccntr_queue_node_t* ccntr_queue_get_node(ccntr_queue_t *self);
-const ccntr_queue_node_t* ccntr_queue_get_node_c(const ccntr_queue_t *self);
+ccntr_queue_node_t* ccntr_queue_get_current(ccntr_queue_t *self);
+const ccntr_queue_node_t* ccntr_queue_get_current_c(const ccntr_queue_t *self);
 
 void ccntr_queue_link(ccntr_queue_t *self, ccntr_queue_node_t *node);
 ccntr_queue_node_t* ccntr_queue_unlink(ccntr_queue_t *self);

@@ -87,7 +87,7 @@ void stack_pop_test(void **state)
 
     // Pop element 3.
 
-    node = ccntr_stack_get_node(stack);
+    node = ccntr_stack_get_current(stack);
     assert_non_null( node );
     assert_ptr_equal( ccntr_stack_unlink(stack), node );
     assert_int_equal( ccntr_stack_get_count(stack), 2 );
@@ -98,7 +98,7 @@ void stack_pop_test(void **state)
 
     // Pop element 2.
 
-    node = ccntr_stack_get_node(stack);
+    node = ccntr_stack_get_current(stack);
     assert_non_null( node );
     assert_ptr_equal( ccntr_stack_unlink(stack), node );
     assert_int_equal( ccntr_stack_get_count(stack), 1 );
@@ -109,7 +109,7 @@ void stack_pop_test(void **state)
 
     // Pop element 1.
 
-    node = ccntr_stack_get_node(stack);
+    node = ccntr_stack_get_current(stack);
     assert_non_null( node );
     assert_ptr_equal( ccntr_stack_unlink(stack), node );
     assert_int_equal( ccntr_stack_get_count(stack), 0 );
@@ -120,7 +120,7 @@ void stack_pop_test(void **state)
 
     // Pop empty.
 
-    assert_null( ccntr_stack_get_node(stack) );
+    assert_null( ccntr_stack_get_current(stack) );
     assert_null( ccntr_stack_unlink(stack) );
     assert_int_equal( ccntr_stack_get_count(stack), 0 );
 }

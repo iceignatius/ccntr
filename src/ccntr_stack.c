@@ -25,7 +25,7 @@ unsigned ccntr_stack_get_count(const ccntr_stack_t *self)
      */
 }
 //------------------------------------------------------------------------------
-node_t* ccntr_stack_get_node(ccntr_stack_t *self)
+node_t* ccntr_stack_get_current(ccntr_stack_t *self)
 {
     /**
      * @memberof ccntr_stack_t
@@ -37,7 +37,7 @@ node_t* ccntr_stack_get_node(ccntr_stack_t *self)
      */
 }
 //------------------------------------------------------------------------------
-const node_t* ccntr_stack_get_node_c(const ccntr_stack_t *self)
+const node_t* ccntr_stack_get_current_c(const ccntr_stack_t *self)
 {
     /**
      * @memberof ccntr_stack_t

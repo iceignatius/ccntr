@@ -25,7 +25,7 @@ unsigned ccntr_queue_get_count(const ccntr_queue_t *self)
      */
 }
 //------------------------------------------------------------------------------
-node_t* ccntr_queue_get_node(ccntr_queue_t *self)
+node_t* ccntr_queue_get_current(ccntr_queue_t *self)
 {
     /**
      * @memberof ccntr_queue_t
@@ -37,7 +37,7 @@ node_t* ccntr_queue_get_node(ccntr_queue_t *self)
      */
 }
 //------------------------------------------------------------------------------
-const node_t* ccntr_queue_get_node_c(const ccntr_queue_t *self)
+const node_t* ccntr_queue_get_current_c(const ccntr_queue_t *self)
 {
     /**
      * @memberof ccntr_queue_t

@@ -87,7 +87,7 @@ void queue_pop_test(void **state)
 
     // Pop element 1.
 
-    node = ccntr_queue_get_node(queue);
+    node = ccntr_queue_get_current(queue);
     assert_non_null( node );
     assert_ptr_equal( ccntr_queue_unlink(queue), node );
     assert_int_equal( ccntr_queue_get_count(queue), 2 );
@@ -98,7 +98,7 @@ void queue_pop_test(void **state)
 
     // Pop element 2.
 
-    node = ccntr_queue_get_node(queue);
+    node = ccntr_queue_get_current(queue);
     assert_non_null( node );
     assert_ptr_equal( ccntr_queue_unlink(queue), node );
     assert_int_equal( ccntr_queue_get_count(queue), 1 );
@@ -109,7 +109,7 @@ void queue_pop_test(void **state)
 
     // Pop element 3.
 
-    node = ccntr_queue_get_node(queue);
+    node = ccntr_queue_get_current(queue);
     assert_non_null( node );
     assert_ptr_equal( ccntr_queue_unlink(queue), node );
     assert_int_equal( ccntr_queue_get_count(queue), 0 );
@@ -120,7 +120,7 @@ void queue_pop_test(void **state)
 
     // Pop empty.
 
-    assert_null( ccntr_queue_get_node(queue) );
+    assert_null( ccntr_queue_get_current(queue) );
     assert_null( ccntr_queue_unlink(queue) );
     assert_int_equal( ccntr_queue_get_count(queue), 0 );
 }
