@@ -81,18 +81,6 @@ void ccntr_man_stack_destroy(ccntr_man_stack_t *self)
     ccntr_man_stack_clear(self);
 }
 //------------------------------------------------------------------------------
-unsigned ccntr_man_stack_get_count(const ccntr_man_stack_t *self)
-{
-    /**
-     * @memberof ccntr_man_stack_t
-     * @brief Get count of values it contained.
-     *
-     * @param self Object instance.
-     * @return The count of values.
-     */
-    return ccntr_stack_get_count(&self->super);
-}
-//------------------------------------------------------------------------------
 void* ccntr_man_stack_get_current(ccntr_man_stack_t *self)
 {
     /**
@@ -108,19 +96,6 @@ void* ccntr_man_stack_get_current(ccntr_man_stack_t *self)
 
     element_t *ele = container_of(node, element_t, node);
     return ele->value;
-}
-//------------------------------------------------------------------------------
-const void* ccntr_man_stack_get_current_c(const ccntr_man_stack_t *self)
-{
-    /**
-     * @memberof ccntr_man_stack_t
-     * @brief Get the current value.
-     *
-     * @param self Object instance.
-     * @return The current value;
-     *         or NULL if container is empty.
-     */
-    return ccntr_man_stack_get_current((ccntr_man_stack_t*)self);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_stack_push(ccntr_man_stack_t *self, void *value)
