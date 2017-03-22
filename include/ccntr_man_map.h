@@ -27,14 +27,72 @@ typedef struct ccntr_man_map_iter_t
     ccntr_map_node_t       *node;
 } ccntr_man_map_iter_t;
 
+static inline
 void ccntr_man_map_iter_init(ccntr_man_map_iter_t   *self,
                              struct ccntr_man_map_t *container,
-                             ccntr_map_node_t       *node);
+                             ccntr_map_node_t       *node)
+{
+    self->container = container;
+    self->node      = node;
+}
 
-bool ccntr_man_map_iter_have_value(const ccntr_man_map_iter_t *self);
-void ccntr_man_map_iter_move_prev(ccntr_man_map_iter_t *self);
-void ccntr_man_map_iter_move_next(ccntr_man_map_iter_t *self);
-void* ccntr_man_map_iter_get_key(ccntr_man_map_iter_t *self);
+static inline
+bool ccntr_man_map_iter_have_value(const ccntr_man_map_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_iter_t
+     * @brief Check if have a valid value.
+     *
+     * @param self Object instance.
+     * @return TRUE if it have a value; and FALSE if not.
+     */
+    return self->node;
+}
+
+static inline
+void ccntr_man_map_iter_move_prev(ccntr_man_map_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_iter_t
+     * @brief Move iterator to the previous value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = ccntr_map_node_get_prev(self->node);
+}
+
+static inline
+void ccntr_man_map_iter_move_next(ccntr_man_map_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_iter_t
+     * @brief Move iterator to the next value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = ccntr_map_node_get_next(self->node);
+}
+
+static inline
+void* ccntr_man_map_iter_get_key(ccntr_man_map_iter_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_iter_t
+     * @brief Get key.
+     *
+     * @param self Object instance.
+     * @return The key be pointed by the iterator.
+     *
+     * @attention Do NOT modify the key directly, except
+     *            the key (and value) has already be popped from the container.
+     *            If you want to modify a key in the container,
+     *            you will be need to erase or pop it, then modify it, then insert again.
+     */
+    return self->node ? self->node->key : NULL;
+}
+
 void* ccntr_man_map_iter_get_value(ccntr_man_map_iter_t *self);
 
 /**
@@ -47,14 +105,67 @@ typedef struct ccntr_man_map_citer_t
     const ccntr_map_node_t       *node;
 } ccntr_man_map_citer_t;
 
+static inline
 void ccntr_man_map_citer_init(ccntr_man_map_citer_t        *self,
                               const struct ccntr_man_map_t *container,
-                              const ccntr_map_node_t       *node);
+                              const ccntr_map_node_t       *node)
+{
+    self->container = container;
+    self->node      = node;
+}
 
-bool ccntr_man_map_citer_have_value(const ccntr_man_map_citer_t *self);
-void ccntr_man_map_citer_move_prev(ccntr_man_map_citer_t *self);
-void ccntr_man_map_citer_move_next(ccntr_man_map_citer_t *self);
-const void* ccntr_man_map_citer_get_key(const ccntr_man_map_citer_t *self);
+static inline
+bool ccntr_man_map_citer_have_value(const ccntr_man_map_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_citer_t
+     * @brief Check if have a valid value.
+     *
+     * @param self Object instance.
+     * @return TRUE if it have a value; and FALSE if not.
+     */
+    return self->node;
+}
+
+static inline
+void ccntr_man_map_citer_move_prev(ccntr_man_map_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_citer_t
+     * @brief Move iterator to the previous value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = ccntr_map_node_get_prev_c(self->node);
+}
+
+static inline
+void ccntr_man_map_citer_move_next(ccntr_man_map_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_citer_t
+     * @brief Move iterator to the next value.
+     *
+     * @param self Object instance.
+     */
+    if( self->node )
+        self->node = ccntr_map_node_get_next_c(self->node);
+}
+
+static inline
+const void* ccntr_man_map_citer_get_key(const ccntr_man_map_citer_t *self)
+{
+    /**
+     * @memberof ccntr_man_map_citer_t
+     * @brief Get key.
+     *
+     * @param self Object instance.
+     * @return The key be pointed by the iterator.
+     */
+    return self->node ? self->node->key : NULL;
+}
+
 const void* ccntr_man_map_citer_get_value(const ccntr_man_map_citer_t *self);
 
 /**
