@@ -36,7 +36,7 @@ void element_release(element_t *ele, ccntr_man_list_release_value_t release_valu
 static
 void* element_release_but_keep_value(element_t *ele)
 {
-    void *value = ele;
+    void *value = ele->value;
     free(ele);
 
     return value;
