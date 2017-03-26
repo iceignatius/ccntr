@@ -9,6 +9,7 @@
 #define _CCNTR_QUEUE_H_
 
 #include <stddef.h>
+#include "ccntr_spinlock.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +33,9 @@ typedef struct ccntr_queue_t
     ccntr_queue_node_t *first;
     ccntr_queue_node_t *last;
     unsigned            count;
+
+    ccntr_spinlock_t lock;
+
 } ccntr_queue_t;
 
 static inline
@@ -46,6 +50,8 @@ void ccntr_queue_init(ccntr_queue_t *self)
     self->first = NULL;
     self->last  = NULL;
     self->count = 0;
+
+    ccntr_spinlock_init(&self->lock);
 }
 
 static inline
@@ -58,7 +64,11 @@ unsigned ccntr_queue_get_count(const ccntr_queue_t *self)
      * @param self Object instance.
      * @return The nodes count.
      */
-    return self->count;
+    ccntr_spinlock_lock( (ccntr_spinlock_t*) &self->lock );
+    unsigned count = self->count;
+    ccntr_spinlock_unlock( (ccntr_spinlock_t*) &self->lock );
+
+    return count;
 }
 
 static inline
@@ -72,7 +82,11 @@ ccntr_queue_node_t* ccntr_queue_get_current(ccntr_queue_t *self)
      * @return The current node in container;
      *         or NULL if container is empty.
      */
-    return self->first;
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_queue_node_t *node = self->first;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 
 static inline
@@ -86,7 +100,7 @@ const ccntr_queue_node_t* ccntr_queue_get_current_c(const ccntr_queue_t *self)
      * @return The current node in container;
      *         or NULL if container is empty.
      */
-    return self->first;
+    return ccntr_queue_get_current((ccntr_queue_t*)self);
 }
 
 void ccntr_queue_link(ccntr_queue_t *self, ccntr_queue_node_t *node);
@@ -101,9 +115,13 @@ void ccntr_queue_discard_all(ccntr_queue_t *self)
      *
      * @param self Object instance.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     self->first = NULL;
     self->last  = NULL;
     self->count = 0;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 
 #ifdef __cplusplus

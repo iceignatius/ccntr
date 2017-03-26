@@ -625,6 +625,8 @@ void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare)
     self->root    = NULL;
     self->count   = 0;
     self->compare = compare ? compare : compare_default;
+
+    ccntr_spinlock_init(&self->lock);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_get_first(ccntr_map_t *self)
@@ -639,7 +641,11 @@ node_t* ccntr_map_get_first(ccntr_map_t *self)
      * @remarks Visit nodes with in-order rule usually be suit for most usage,
      *          and the first node will have the smallest key.
      */
-    return tree_get_first_inorder(self->root);
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_get_first_inorder(self->root);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_get_last(ccntr_map_t *self)
@@ -654,7 +660,11 @@ node_t* ccntr_map_get_last(ccntr_map_t *self)
      * @remarks Visit nodes with in-order rule usually be suit for most usage,
      *          and the last node will have the largest key.
      */
-    return tree_get_last_inorder(self->root);
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_get_last_inorder(self->root);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_get_first_postorder(ccntr_map_t *self)
@@ -669,7 +679,11 @@ node_t* ccntr_map_get_first_postorder(ccntr_map_t *self)
      * @remarks Visit nodes with post-order rule usually be suit for some usage
      *          like visit and release all nodes.
      */
-    return tree_get_first_postorder(self->root);
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_get_first_postorder(self->root);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_find(ccntr_map_t *self, const void *key)
@@ -682,7 +696,11 @@ node_t* ccntr_map_find(ccntr_map_t *self, const void *key)
      * @param key  Key of the node.
      * @return The node if found; and NULL if not found.
      */
-    return tree_find_match(self->root, key, self->compare);
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_find_match(self->root, key, self->compare);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
@@ -705,6 +723,8 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
     if( !node ) return NULL;
 
     node_reset(node);
+
+    ccntr_spinlock_lock(&self->lock);
 
     node_t *duplicated = NULL;
     node_t *closest = tree_find_closest(self->root, node->key, self->compare);
@@ -736,6 +756,8 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
         ++ self->count;
     }
 
+    ccntr_spinlock_unlock(&self->lock);
+
     return duplicated;
 }
 //------------------------------------------------------------------------------
@@ -752,6 +774,8 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
      *            or the behaviour is undefuned!
      */
     if( !node ) return;
+
+    ccntr_spinlock_lock(&self->lock);
 
     // Exchange node position with the nearest single/no child node.
     if( node_have_full_child(node) )
@@ -781,5 +805,7 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
 
     assert( self->count );
     -- self->count;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------

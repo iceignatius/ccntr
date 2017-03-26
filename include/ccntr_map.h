@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "ccntr_spinlock.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,6 +97,8 @@ typedef struct ccntr_map_t
 
     ccntr_map_compare_keys_t compare;
 
+    ccntr_spinlock_t lock;
+
 } ccntr_map_t;
 
 void ccntr_map_init(ccntr_map_t *self, ccntr_map_compare_keys_t compare);
@@ -110,7 +113,11 @@ unsigned ccntr_map_get_count(const ccntr_map_t *self)
      * @param self Object instance.
      * @return The nodes count.
      */
-    return self->count;
+    ccntr_spinlock_lock( (ccntr_spinlock_t*) &self->lock );
+    unsigned count = self->count;
+    ccntr_spinlock_unlock( (ccntr_spinlock_t*) &self->lock );
+
+    return count;
 }
 
 ccntr_map_node_t* ccntr_map_get_first(ccntr_map_t *self);
@@ -177,8 +184,12 @@ void ccntr_map_discard_all(ccntr_map_t *self)
      *
      * @param self Object instance.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     self->root  = NULL;
     self->count = 0;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 
 #ifdef __cplusplus

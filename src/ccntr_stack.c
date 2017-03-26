@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include "ccntr_stack.h"
 
 typedef ccntr_stack_node_t node_t;
@@ -13,10 +14,14 @@ void ccntr_stack_link(ccntr_stack_t *self, node_t *node)
      * @param self Object instance.
      * @param node The new node to be linked.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     node->prev = self->top;
     self->top = node;
 
     ++ self->count;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_stack_unlink(ccntr_stack_t *self)
@@ -29,13 +34,21 @@ node_t* ccntr_stack_unlink(ccntr_stack_t *self)
      * @return The node which just be unlinked;
      *         or NULL if container is empty.
      */
-    node_t *node = self->top;
-    if( !node ) return NULL;
+    node_t *node = NULL;
 
-    self->top = node->prev;
+    ccntr_spinlock_lock(&self->lock);
+    do
+    {
+        node = self->top;
+        if( !node ) break;
 
-    assert( self->count );
-    -- self->count;
+        self->top = node->prev;
+
+        assert( self->count );
+        -- self->count;
+
+    } while(false);
+    ccntr_spinlock_unlock(&self->lock);
 
     return node;
 }

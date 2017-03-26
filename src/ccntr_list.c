@@ -16,6 +16,8 @@ void ccntr_list_link(ccntr_list_t *self, node_t *pos, node_t *node)
      *             the last position for default.
      * @param node The new node to be linked.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     node_t *node_prev = pos ? pos->prev : self->last;
     node_t *node_next = pos;
     node_t *node_new  = node;
@@ -34,6 +36,8 @@ void ccntr_list_link(ccntr_list_t *self, node_t *pos, node_t *node)
         self->last = node_new;
 
     ++ self->count;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_list_unlink(ccntr_list_t *self, node_t *node)
@@ -45,6 +49,8 @@ void ccntr_list_unlink(ccntr_list_t *self, node_t *node)
      * @param self Object instance.
      * @param node The node which is linked in the container.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     node_t *node_prev = node->prev;
     node_t *node_next = node->next;
 
@@ -60,5 +66,7 @@ void ccntr_list_unlink(ccntr_list_t *self, node_t *node)
 
     assert( self->count );
     -- self->count;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------

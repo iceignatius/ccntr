@@ -9,6 +9,7 @@
 #define _CCNTR_LIST_H_
 
 #include <stddef.h>
+#include "ccntr_spinlock.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +34,9 @@ typedef struct ccntr_list_t
     ccntr_list_node_t *first;
     ccntr_list_node_t *last;
     unsigned           count;
+
+    ccntr_spinlock_t lock;
+
 } ccntr_list_t;
 
 static inline
@@ -47,6 +51,8 @@ void ccntr_list_init(ccntr_list_t *self)
     self->first = NULL;
     self->last  = NULL;
     self->count = 0;
+
+    ccntr_spinlock_init(&self->lock);
 }
 
 static inline
@@ -59,7 +65,11 @@ unsigned ccntr_list_get_count(const ccntr_list_t *self)
      * @param self Object instance.
      * @return The nodes count.
      */
-    return self->count;
+    ccntr_spinlock_lock( (ccntr_spinlock_t*) &self->lock );
+    unsigned count = self->count;
+    ccntr_spinlock_unlock( (ccntr_spinlock_t*) &self->lock );
+
+    return count;
 }
 
 static inline
@@ -72,7 +82,11 @@ ccntr_list_node_t* ccntr_list_get_first(ccntr_list_t *self)
      * @param self Object instance.
      * @return The first node; or NULL if no any nodes contained.
      */
-    return self->first;
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_list_node_t *node = self->first;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 
 static inline
@@ -85,7 +99,7 @@ const ccntr_list_node_t* ccntr_list_get_first_c(const ccntr_list_t *self)
      * @param self Object instance.
      * @return The first node; or NULL if no any nodes contained.
      */
-    return self->first;
+    return ccntr_list_get_first((ccntr_list_t*)self);
 }
 
 static inline
@@ -98,7 +112,11 @@ ccntr_list_node_t* ccntr_list_get_last(ccntr_list_t *self)
      * @param self Object instance.
      * @return The last node; or NULL if no any nodes contained.
      */
-    return self->last;
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_list_node_t *node = self->last;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 
 static inline
@@ -111,7 +129,7 @@ const ccntr_list_node_t* ccntr_list_get_last_c(const ccntr_list_t *self)
      * @param self Object instance.
      * @return The last node; or NULL if no any nodes contained.
      */
-    return self->last;
+    return ccntr_list_get_last((ccntr_list_t*)self);
 }
 
 void ccntr_list_link  (ccntr_list_t *self, ccntr_list_node_t *pos, ccntr_list_node_t *node);
@@ -152,7 +170,13 @@ void ccntr_list_discard_all(ccntr_list_t *self)
      *
      * @param self Object instance.
      */
-    ccntr_list_init(self);
+    ccntr_spinlock_lock(&self->lock);
+
+    self->first = NULL;
+    self->last  = NULL;
+    self->count = 0;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 
 #ifdef __cplusplus
