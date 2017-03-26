@@ -28,6 +28,7 @@ Features
 
     We build a compile-time option to enable or disable the thread safe behaviour,
     so that users can operate container in multiple threads without external locks.
+    (This option is disabled by default)
 
     The following are examples to enable and disable thread safe behaviour:
 
