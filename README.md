@@ -6,7 +6,42 @@ Introduction
 
 This is a C library to offer a set of easy use general containers.
 
-For each type of container,
+Features
+--------
+
+* This library support the following types of container:
+
+    * Linked list.
+    * Queue (first in, first out list).
+    * Stack (last in, first out list).
+    * Key map.
+
+* Suppot multiple sub types of container:
+
+    * Container templates (implemented by macros) that can be used easily.
+    * Pure container without memory management and iterator
+        that can be used on embedd environment.
+
+    Please see the following sections for more information in details.
+
+* Optional thread safe behaviour.
+
+    We build a compile-time option to enable or disable the thread safe behaviour,
+    so that users can operate container in multiple threads without external locks.
+
+    The following are examples to enable and disable thread safe behaviour:
+
+        cmake -DCCNTR_THREAD_SAFE=ON /path/to/source
+
+        cmake -DCCNTR_THREAD_SAFE=OFF /path/to/source
+
+    (Please notice that the thread safe behaviour is design to
+    protect the container it self without iterators!)
+
+Sub Types
+---------
+
+For each major type of container,
 we implement 3 sub types for different occasion and preference:
 
 1. Pure container.
@@ -37,16 +72,6 @@ we implement 3 sub types for different occasion and preference:
     by `CCNTR_DECLARE_<type>` macro.
 
     The container be built by template will be named as `<user_defined_name>_*`.
-
-Types of Container
-------------------
-
-This library support the following types of container:
-
-* Linked list.
-* Queue (first in, first out list).
-* Stack (last in, first out list).
-* Key map.
 
 Examples
 --------

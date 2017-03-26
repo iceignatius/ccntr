@@ -11,4 +11,6 @@
     #define CCNTR_MAN_MAP_ENABLED
 #endif
 
+#cmakedefine CCNTR_THREAD_SAFE
+
 #endif
