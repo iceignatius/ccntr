@@ -97,7 +97,7 @@ typedef struct ccntr_map_t
 
     ccntr_map_compare_keys_t compare;
 
-    ccntr_spinlock_t lock;
+    CCNTR_DECLARE_SPINLOCK(lock);
 
 } ccntr_map_t;
 

@@ -34,7 +34,7 @@ typedef struct ccntr_queue_t
     ccntr_queue_node_t *last;
     unsigned            count;
 
-    ccntr_spinlock_t lock;
+    CCNTR_DECLARE_SPINLOCK(lock);
 
 } ccntr_queue_t;
 

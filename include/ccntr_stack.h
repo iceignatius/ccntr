@@ -33,7 +33,7 @@ typedef struct ccntr_stack_t
     ccntr_stack_node_t *top;
     unsigned            count;
 
-    ccntr_spinlock_t lock;
+    CCNTR_DECLARE_SPINLOCK(lock);
 
 } ccntr_stack_t;
 

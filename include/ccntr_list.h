@@ -35,7 +35,7 @@ typedef struct ccntr_list_t
     ccntr_list_node_t *last;
     unsigned           count;
 
-    ccntr_spinlock_t lock;
+    CCNTR_DECLARE_SPINLOCK(lock);
 
 } ccntr_list_t;
 

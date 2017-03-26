@@ -15,6 +15,8 @@ extern "C" {
 
 typedef atomic_flag ccntr_spinlock_t;
 
+#define CCNTR_DECLARE_SPINLOCK(name) ccntr_spinlock_t name
+
 static inline
 void ccntr_spinlock_init(ccntr_spinlock_t *self)
 {
@@ -37,7 +39,8 @@ void ccntr_spinlock_unlock(ccntr_spinlock_t *self)
 
 #else  // CCNTR_THREAD_SAFE
 
-#defint ccntr_spinlock_t
+#define CCNTR_DECLARE_SPINLOCK(name)
+
 #define ccntr_spinlock_init(self)
 #define ccntr_spinlock_lock(self)
 #define ccntr_spinlock_unlock(self)
