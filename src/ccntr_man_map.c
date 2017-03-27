@@ -207,6 +207,7 @@ void ccntr_man_map_erase(ccntr_man_map_t *self, ccntr_man_map_iter_t *pos)
     if( !node ) return;
 
     ccntr_map_unlink(&self->super, node);
+    ccntr_man_map_iter_init(pos, NULL, NULL);
 
     element_t *ele = container_of(node, element_t, node);
     element_release(ele, self->release_key, self->release_value);
@@ -284,6 +285,7 @@ void* ccntr_man_map_pop(ccntr_man_map_t *self, ccntr_man_map_iter_t *pos)
     if( !node ) return NULL;
 
     ccntr_map_unlink(&self->super, node);
+    ccntr_man_map_iter_init(pos, NULL, pos->node);
 
     element_t *ele = container_of(node, element_t, node);
     return element_release_but_keep_key_and_value(ele);

@@ -178,6 +178,7 @@ void ccntr_man_list_erase(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
     if( !node ) return;
 
     ccntr_list_unlink(&self->super, node);
+    ccntr_man_list_iter_init(pos, NULL, NULL);
 
     element_t *ele = container_of(node, element_t, node);
     element_release(ele, self->release_value);
@@ -273,6 +274,7 @@ void* ccntr_man_list_pop(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)
     if( !node ) return NULL;
 
     ccntr_list_unlink(&self->super, node);
+    ccntr_man_list_iter_init(pos, NULL, pos->node);
 
     element_t *ele = container_of(node, element_t, node);
     return element_release_but_keep_value(ele);

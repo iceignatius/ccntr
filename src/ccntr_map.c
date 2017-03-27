@@ -813,6 +813,8 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
     ccntr_spinlock_lock(&self->lock);
     ccntr_map_unlink_without_lock(self, node);
     ccntr_spinlock_unlock(&self->lock);
+
+    node_reset(node);
 }
 //------------------------------------------------------------------------------
 node_t* ccntr_map_unlink_by_key(ccntr_map_t *self, const void *key)

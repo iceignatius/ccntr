@@ -68,5 +68,8 @@ void ccntr_list_unlink(ccntr_list_t *self, node_t *node)
     -- self->count;
 
     ccntr_spinlock_unlock(&self->lock);
+
+    node->prev = NULL;
+    node->next = NULL;
 }
 //------------------------------------------------------------------------------
