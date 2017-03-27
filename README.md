@@ -1,4 +1,4 @@
-General Container Library for C Language {#mainpage}
+General Container Library for C Language
 ========================================
 
 Introduction
