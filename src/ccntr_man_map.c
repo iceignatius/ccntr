@@ -221,13 +221,25 @@ void ccntr_man_map_erase_by_key(ccntr_man_map_t *self, const void *key)
      * @param self Object instance.
      * @param key  Key of the value.
      */
-    node_t *node = ccntr_map_find(&self->super, key);
+    node_t *node = ccntr_map_unlink_by_key(&self->super, key);
     if( !node ) return;
-
-    ccntr_map_unlink(&self->super, node);
 
     element_t *ele = container_of(node, element_t, node);
     element_release(ele, self->release_key, self->release_value);
+}
+//------------------------------------------------------------------------------
+static
+void move_contents_to_shadow_object(ccntr_man_map_t *shadow, ccntr_man_map_t *src)
+{
+    ccntr_spinlock_lock(&src->super.lock);
+
+    *shadow = *src;
+    ccntr_spinlock_init(&shadow->super.lock);
+
+    src->super.root  = NULL;
+    src->super.count = 0;
+
+    ccntr_spinlock_unlock(&src->super.lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_map_clear(ccntr_man_map_t *self)
@@ -238,16 +250,17 @@ void ccntr_man_map_clear(ccntr_man_map_t *self)
      *
      * @param self Object instance.
      */
-    node_t *node = ccntr_map_get_first_postorder(&self->super);
+    ccntr_man_map_t shadow;
+    move_contents_to_shadow_object(&shadow, self);
+
+    node_t *node = ccntr_map_get_first_postorder(&shadow.super);
     while( node )
     {
         element_t *ele = container_of(node, element_t, node);
         node = ccntr_map_node_get_next_postorder(node);
 
-        element_release(ele, self->release_key, self->release_value);
+        element_release(ele, shadow.release_key, shadow.release_value);
     }
-
-    ccntr_map_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_map_pop(ccntr_man_map_t *self, ccntr_man_map_iter_t *pos)

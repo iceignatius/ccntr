@@ -147,6 +147,21 @@ void ccntr_man_queue_erase_current(ccntr_man_queue_t *self)
     element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
+static
+void move_contents_to_shadow_object(ccntr_man_queue_t *shadow, ccntr_man_queue_t *src)
+{
+    ccntr_spinlock_lock(&src->super.lock);
+
+    *shadow = *src;
+    ccntr_spinlock_init(&shadow->super.lock);
+
+    src->super.first = NULL;
+    src->super.last  = NULL;
+    src->super.count = 0;
+
+    ccntr_spinlock_unlock(&src->super.lock);
+}
+//------------------------------------------------------------------------------
 void ccntr_man_queue_clear(ccntr_man_queue_t *self)
 {
     /**
@@ -155,16 +170,17 @@ void ccntr_man_queue_clear(ccntr_man_queue_t *self)
      *
      * @param self Object instance.
      */
-    node_t *node = ccntr_queue_get_current(&self->super);
+    ccntr_man_queue_t shadow;
+    move_contents_to_shadow_object(&shadow, self);
+
+    node_t *node = ccntr_queue_get_current(&shadow.super);
     while( node )
     {
         element_t *ele = container_of(node, element_t, node);
         node = node->next;
 
-        element_release(ele, self->release_value);
+        element_release(ele, shadow.release_value);
     }
-
-    ccntr_queue_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
 

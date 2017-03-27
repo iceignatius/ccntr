@@ -217,6 +217,21 @@ void ccntr_man_list_erase_last(ccntr_man_list_t *self)
     element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
+static
+void move_contents_to_shadow_object(ccntr_man_list_t *shadow, ccntr_man_list_t *src)
+{
+    ccntr_spinlock_lock(&src->super.lock);
+
+    *shadow = *src;
+    ccntr_spinlock_init(&shadow->super.lock);
+
+    src->super.first = NULL;
+    src->super.last  = NULL;
+    src->super.count = 0;
+
+    ccntr_spinlock_unlock(&src->super.lock);
+}
+//------------------------------------------------------------------------------
 void ccntr_man_list_clear(ccntr_man_list_t *self)
 {
     /**
@@ -225,16 +240,17 @@ void ccntr_man_list_clear(ccntr_man_list_t *self)
      *
      * @param self Object instance.
      */
-    node_t *node = ccntr_list_get_first(&self->super);
+    ccntr_man_list_t shadow;
+    move_contents_to_shadow_object(&shadow, self);
+
+    node_t *node = ccntr_list_get_first(&shadow.super);
     while( node )
     {
         element_t *ele = container_of(node, element_t, node);
         node = node->next;
 
-        element_release(ele, self->release_value);
+        element_release(ele, shadow.release_value);
     }
-
-    ccntr_list_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_list_pop(ccntr_man_list_t *self, ccntr_man_list_iter_t *pos)

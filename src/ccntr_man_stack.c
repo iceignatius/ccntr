@@ -147,6 +147,20 @@ void ccntr_man_stack_erase_current(ccntr_man_stack_t *self)
     element_release(ele, self->release_value);
 }
 //------------------------------------------------------------------------------
+static
+void move_contents_to_shadow_object(ccntr_man_stack_t *shadow, ccntr_man_stack_t *src)
+{
+    ccntr_spinlock_lock(&src->super.lock);
+
+    *shadow = *src;
+    ccntr_spinlock_init(&shadow->super.lock);
+
+    src->super.top   = NULL;
+    src->super.count = 0;
+
+    ccntr_spinlock_unlock(&src->super.lock);
+}
+//------------------------------------------------------------------------------
 void ccntr_man_stack_clear(ccntr_man_stack_t *self)
 {
     /**
@@ -155,16 +169,17 @@ void ccntr_man_stack_clear(ccntr_man_stack_t *self)
      *
      * @param self Object instance.
      */
-    node_t *node = ccntr_stack_get_current(&self->super);
+    ccntr_man_stack_t shadow;
+    move_contents_to_shadow_object(&shadow, self);
+
+    node_t *node = ccntr_stack_get_current(&shadow.super);
     while( node )
     {
         element_t *ele = container_of(node, element_t, node);
         node = node->prev;
 
-        element_release(ele, self->release_value);
+        element_release(ele, shadow.release_value);
     }
-
-    ccntr_stack_discard_all(&self->super);
 }
 //------------------------------------------------------------------------------
 
