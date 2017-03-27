@@ -1,4 +1,4 @@
-General Container Library for C Language
+General Container Library for C Language {#mainpage}
 ========================================
 
 Introduction
@@ -74,12 +74,22 @@ we implement 3 sub types for different occasion and preference:
 
     The container be built by template will be named as `<user_defined_name>_*`.
 
+Documentation
+-------------
+
+*Doxygen* can be used to generate the full document,
+and please refer that to use library in details:
+
+    doxygen
+
+By the other way, Examples in the next session can be used to quick start.
+
 Examples
 --------
 
 The following codes are two examples to show how to use this library.
-We only use linked list type of container as example,
-but the others are similarly.
+We only use linked list container as examples,
+and the others are similarly.
 
 ### List Template
 
