@@ -174,6 +174,7 @@ const ccntr_map_node_t* ccntr_map_find_c(const ccntr_map_t *self, const void *ke
 
 ccntr_map_node_t* ccntr_map_link(ccntr_map_t *self, ccntr_map_node_t *node);
 void ccntr_map_unlink(ccntr_map_t *self, ccntr_map_node_t *node);
+ccntr_map_node_t* ccntr_map_unlink_by_key(ccntr_map_t *self, const void *key);
 
 static inline
 void ccntr_map_discard_all(ccntr_map_t *self)

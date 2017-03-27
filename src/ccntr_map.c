@@ -761,21 +761,10 @@ node_t* ccntr_map_link(ccntr_map_t *self, node_t *node)
     return duplicated;
 }
 //------------------------------------------------------------------------------
-void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
+static
+void ccntr_map_unlink_without_lock(ccntr_map_t *self, node_t *node)
 {
-    /**
-     * @memberof ccntr_map_t
-     * @brief Unlink a node from the container.
-     *
-     * @param self Object instance.
-     * @param node The node which is linked in the container.
-     *
-     * @attention The node to be unlinkd must be a member of this container,
-     *            or the behaviour is undefuned!
-     */
-    if( !node ) return;
-
-    ccntr_spinlock_lock(&self->lock);
+    assert( node );
 
     // Exchange node position with the nearest single/no child node.
     if( node_have_full_child(node) )
@@ -805,7 +794,45 @@ void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
 
     assert( self->count );
     -- self->count;
+}
+//------------------------------------------------------------------------------
+void ccntr_map_unlink(ccntr_map_t *self, node_t *node)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Unlink a node from the container.
+     *
+     * @param self Object instance.
+     * @param node The node which is linked in the container.
+     *
+     * @attention The node to be unlinkd must be a member of this container,
+     *            or the behaviour is undefuned!
+     */
+    if( !node ) return;
+
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_unlink_without_lock(self, node);
+    ccntr_spinlock_unlock(&self->lock);
+}
+//------------------------------------------------------------------------------
+node_t* ccntr_map_unlink_by_key(ccntr_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Search and unlink a node from the container.
+     *
+     * @param self Object instance.
+     * @param key  Key of the node.
+     * @return The node which just be found and unlinked;
+     *         or NULL if there does not have a node with the key.
+     */
+    ccntr_spinlock_lock(&self->lock);
+
+    node_t *node = tree_find_match(self->root, key, self->compare);
+    if( node ) ccntr_map_unlink_without_lock(self, node);
 
     ccntr_spinlock_unlock(&self->lock);
+
+    return node;
 }
 //------------------------------------------------------------------------------

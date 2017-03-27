@@ -181,6 +181,65 @@ void map_unlink_test(void **state)
 }
 //------------------------------------------------------------------------------
 static
+void map_unlink_by_key_test(void **state)
+{
+    // Build container base.
+
+    ccntr_map_t map;
+    ccntr_map_init(&map, compare_keys);
+
+    node_t *node_1 = node_create(1);
+    node_t *node_3 = node_create(3);
+    node_t *node_5 = node_create(5);
+    node_t *node_7 = node_create(7);
+    node_t *node_9 = node_create(9);
+
+    assert_null( ccntr_map_link(&map, node_1) );
+    assert_null( ccntr_map_link(&map, node_3) );
+    assert_null( ccntr_map_link(&map, node_5) );
+    assert_null( ccntr_map_link(&map, node_7) );
+    assert_null( ccntr_map_link(&map, node_9) );
+    assert_int_equal( ccntr_map_get_count(&map), 5 );
+
+    // Unlink test.
+
+    assert_ptr_equal( ccntr_map_unlink_by_key(&map, (void*)(intptr_t) 3), node_3 );
+    node_release(node_3);
+    assert_int_equal( ccntr_map_get_count(&map), 4 );
+
+    assert_ptr_equal( ccntr_map_unlink_by_key(&map, (void*)(intptr_t) 7), node_7 );
+    node_release(node_7);
+    assert_int_equal( ccntr_map_get_count(&map), 3 );
+
+    assert_null( ccntr_map_unlink_by_key(&map, (void*)(intptr_t) 250) );
+    assert_int_equal( ccntr_map_get_count(&map), 3 );
+
+    // Iterate test.
+
+    node_t *node = ccntr_map_get_first(&map); assert_ptr_equal( node, node_1 );
+    node = ccntr_map_node_get_next(node); assert_ptr_equal( node, node_5 );
+    node = ccntr_map_node_get_next(node); assert_ptr_equal( node, node_9 );
+    node = ccntr_map_node_get_next(node); assert_null( node );
+
+    node = ccntr_map_get_last(&map); assert_ptr_equal( node, node_9 );
+    node = ccntr_map_node_get_prev(node); assert_ptr_equal( node, node_5 );
+    node = ccntr_map_node_get_prev(node); assert_ptr_equal( node, node_1 );
+    node = ccntr_map_node_get_prev(node); assert_null( node );
+
+    // Clear.
+
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
+    ccntr_map_discard_all(&map);
+}
+//------------------------------------------------------------------------------
+static
 void map_search_test(void **state)
 {
     // Build container base.
@@ -460,6 +519,7 @@ int test_map(void)
         cmocka_unit_test(map_simple_link_test),
         cmocka_unit_test(map_iterate_test),
         cmocka_unit_test(map_unlink_test),
+        cmocka_unit_test(map_unlink_by_key_test),
         cmocka_unit_test(map_search_test),
         cmocka_unit_test(map_duplicated_link_test),
         cmocka_unit_test(map_rbtree_condition_test),
