@@ -27,7 +27,7 @@ set(depend_libs ${depend_libs} ccntr)
 set(depend_libs ${depend_libs} cmocka)
 
 if(CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
