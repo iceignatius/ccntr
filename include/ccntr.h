@@ -8,6 +8,9 @@
 #ifndef _CCNTR_H_
 #define _CCNTR_H_
 
+#include "ccntr_man_array.h"
+#include "ccntr_array_template.h"
+
 #include "ccntr_list.h"
 #include "ccntr_man_list.h"
 #include "ccntr_list_template.h"

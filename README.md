@@ -11,6 +11,7 @@ Features
 
 * This library support the following types of container:
 
+    * Array.
     * Linked list.
     * Queue (first in, first out list).
     * Stack (last in, first out list).
