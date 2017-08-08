@@ -8,7 +8,7 @@
 #ifndef _CCNTR_MAN_ARRAY_H_
 #define _CCNTR_MAN_ARRAY_H_
 
-#include "ccntr_config.h"
+#include "ccntr_spinlock.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,6 +48,8 @@ typedef struct ccntr_man_array_t
 
     ccntr_man_array_compare_values_t compare;
     ccntr_man_array_release_value_t  release_value;
+
+    CCNTR_DECLARE_SPINLOCK(lock);
 
 } ccntr_man_array_t;
 

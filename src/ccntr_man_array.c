@@ -36,6 +36,8 @@ void ccntr_man_array_init(ccntr_man_array_t                *self,
 
     self->compare       = compare;
     self->release_value = release_value ? release_value : release_value_default;
+
+    ccntr_spinlock_init(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_destroy(ccntr_man_array_t *self)
@@ -62,7 +64,11 @@ unsigned ccntr_man_array_get_count(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The elements count.
      */
-    return self->count;
+    ccntr_spinlock_lock( (ccntr_spinlock_t*) &self->lock );
+    unsigned count = self->count;
+    ccntr_spinlock_unlock( (ccntr_spinlock_t*) &self->lock );
+
+    return count;
 }
 //------------------------------------------------------------------------------
 void** ccntr_man_array_baseptr(ccntr_man_array_t *self)
@@ -73,6 +79,8 @@ void** ccntr_man_array_baseptr(ccntr_man_array_t *self)
      *
      * @param self Object instance.
      * @return The data array.
+     *
+     * @note This function is not thread safe!
      */
     return self->elements;
 }
@@ -85,6 +93,8 @@ void const* const* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
      *
      * @param self Object instance.
      * @return The data array.
+     *
+     * @note This function is not thread safe!
      */
     return (const void*) self->elements;
 }
@@ -98,7 +108,11 @@ void* ccntr_man_array_get_first(ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The first element; or NULL if container is empty.
      */
-    return self->count ? self->elements[0] : NULL;
+    ccntr_spinlock_lock(&self->lock);
+    void *value = self->count ? self->elements[0] : NULL;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return value;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self)
@@ -110,7 +124,7 @@ const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The first element; or NULL if container is empty.
      */
-    return self->count ? self->elements[0] : NULL;
+    return ccntr_man_array_get_first((ccntr_man_array_t*)self);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get_last(ccntr_man_array_t *self)
@@ -122,7 +136,11 @@ void* ccntr_man_array_get_last(ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The last element; or NULL if container is empty.
      */
-    return self->count ? self->elements[ self->count - 1 ] : NULL;
+    ccntr_spinlock_lock(&self->lock);
+    void *value = self->count ? self->elements[ self->count - 1 ] : NULL;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return value;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_last_c(const ccntr_man_array_t *self)
@@ -134,7 +152,7 @@ const void* ccntr_man_array_get_last_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The last element; or NULL if container is empty.
      */
-    return self->count ? self->elements[ self->count - 1 ] : NULL;
+    return ccntr_man_array_get_last((ccntr_man_array_t*)self);
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get(ccntr_man_array_t *self, unsigned index)
@@ -147,7 +165,11 @@ void* ccntr_man_array_get(ccntr_man_array_t *self, unsigned index)
      * @param index Index of the element.
      * @return The element at the position; or NULL if the index is out of range.
      */
-    return index < self->count ? self->elements[index] : NULL;
+    ccntr_spinlock_lock(&self->lock);
+    void *value = index < self->count ? self->elements[index] : NULL;
+    ccntr_spinlock_unlock(&self->lock);
+
+    return value;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_c(const ccntr_man_array_t *self, unsigned index)
@@ -160,7 +182,7 @@ const void* ccntr_man_array_get_c(const ccntr_man_array_t *self, unsigned index)
      * @param index Index of the element.
      * @return The element at the position; or NULL if the index is out of range.
      */
-    return index < self->count ? self->elements[index] : NULL;
+    return ccntr_man_array_get((ccntr_man_array_t*)self, index);
 }
 //------------------------------------------------------------------------------
 static
@@ -192,6 +214,8 @@ void ccntr_man_array_insert(ccntr_man_array_t *self, unsigned index, void *value
      *              the value will be appended to the end of array.
      * @param value The value to be inserted.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     index = ( index <= self->count )?( index ):( self->count );
 
     if( self->count == self->capacity )
@@ -203,6 +227,8 @@ void ccntr_man_array_insert(ccntr_man_array_t *self, unsigned index, void *value
     self->elements[index] = value;
 
     ++ self->count;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_insert_first(ccntr_man_array_t *self, void *value)
@@ -241,16 +267,24 @@ void ccntr_man_array_replace(ccntr_man_array_t *self, unsigned index, void *valu
      *              the value will be appended to the end of array.
      * @param value The value to be inserted.
      */
-    if( index >= self->count )
+    ccntr_spinlock_lock(&self->lock);
+
+    if( index < self->count )
     {
-        ccntr_man_array_insert_last(self, value);
-        return;
+        void *oldvalue = self->elements[index];
+        self->elements[index] = value;
+
+        self->release_value(oldvalue);
+    }
+    else
+    {
+        if( self->count == self->capacity )
+            extend_array_buffer(self);
+
+        self->elements[ self->count ++ ] = value;
     }
 
-    void *oldvalue = self->elements[index];
-    self->elements[index] = value;
-
-    self->release_value(oldvalue);
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_erase(ccntr_man_array_t *self, unsigned index)
@@ -262,14 +296,19 @@ void ccntr_man_array_erase(ccntr_man_array_t *self, unsigned index)
      * @param self  Object instance.
      * @param index Index of the value.
      */
-    if( index >= self->count ) return;
+    ccntr_spinlock_lock(&self->lock);
 
-    self->release_value(self->elements[index]);
+    if( index < self->count )
+    {
+        self->release_value(self->elements[index]);
 
-    for(unsigned i = index + 1; i < self->count; ++i)
-        self->elements[i-1] = self->elements[i];
+        for(unsigned i = index + 1; i < self->count; ++i)
+            self->elements[i-1] = self->elements[i];
 
-    -- self->count;
+        -- self->count;
+    }
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_erase_first(ccntr_man_array_t *self)
@@ -303,6 +342,8 @@ void ccntr_man_array_clear(ccntr_man_array_t *self)
      *
      * @param self Object instance.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     for(unsigned i = 0; i < self->count; ++i)
     {
         void *value = self->elements[i];
@@ -310,6 +351,8 @@ void ccntr_man_array_clear(ccntr_man_array_t *self)
     }
 
     self->count = 0;
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_sort(ccntr_man_array_t *self)
@@ -323,6 +366,8 @@ void ccntr_man_array_sort(ccntr_man_array_t *self)
      * @remarks This function will have no effect if
      *          function compare_values is not set.
      */
+    ccntr_spinlock_lock(&self->lock);
+
     if( self->compare )
     {
         qsort(self->elements,
@@ -330,6 +375,8 @@ void ccntr_man_array_sort(ccntr_man_array_t *self)
               sizeof(self->elements[0]),
               (int(*)(const void*,const void*)) self->compare);
     }
+
+    ccntr_spinlock_unlock(&self->lock);
 }
 //------------------------------------------------------------------------------
 
