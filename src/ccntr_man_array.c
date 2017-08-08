@@ -1,11 +1,19 @@
+#include <assert.h>
+#include "abort_message.h"
 #include "ccntr_man_array.h"
 
 #ifdef CCNTR_MAN_ARRAY_ENABLED
 
 //------------------------------------------------------------------------------
-void ccntr_man_array_init(ccntr_man_array_t               *self,
-                          ccntr_man_array_compare_values_t compare,
-                          ccntr_man_array_release_value_t  release_value)
+static
+void release_value_default(void *value)
+{
+    // Nothing to do.
+}
+//------------------------------------------------------------------------------
+void ccntr_man_array_init(ccntr_man_array_t                *self,
+                          ccntr_man_array_compare_values_t  compare,
+                          ccntr_man_array_release_value_t   release_value)
 {
     /**
      * @memberof ccntr_man_array_t
@@ -19,6 +27,15 @@ void ccntr_man_array_init(ccntr_man_array_t               *self,
      *
      * @attention Object must be initialised (and once only) before using.
      */
+    self->elements = malloc(1);
+    if( !self->elements )
+        abort_message("ERROR: Cannot allocate more memory!\n");
+
+    self->capacity = 0;
+    self->count    = 0;
+
+    self->compare       = compare;
+    self->release_value = release_value ? release_value : release_value_default;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_destroy(ccntr_man_array_t *self)
@@ -32,6 +49,8 @@ void ccntr_man_array_destroy(ccntr_man_array_t *self)
      * @attention Object must be destructed to finish using,
      *            and must not make any operation to the object after it be destructed.
      */
+    ccntr_man_array_clear(self);
+    free(self->elements);
 }
 //------------------------------------------------------------------------------
 unsigned ccntr_man_array_get_count(const ccntr_man_array_t *self)
@@ -43,9 +62,10 @@ unsigned ccntr_man_array_get_count(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The elements count.
      */
+    return self->count;
 }
 //------------------------------------------------------------------------------
-void* ccntr_man_array_baseptr(ccntr_man_array_t *self)
+void** ccntr_man_array_baseptr(ccntr_man_array_t *self)
 {
     /**
      * @memberof ccntr_man_array_t
@@ -54,9 +74,10 @@ void* ccntr_man_array_baseptr(ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The data array.
      */
+    return self->elements;
 }
 //------------------------------------------------------------------------------
-const void* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
+const void** ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
 {
     /**
      * @memberof ccntr_man_array_t
@@ -65,6 +86,7 @@ const void* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The data array.
      */
+    return self->elements;
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get_first(ccntr_man_array_t *self)
@@ -76,6 +98,7 @@ void* ccntr_man_array_get_first(ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The first element; or NULL if container is empty.
      */
+    return self->count ? self->elements[0] : NULL;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self)
@@ -87,6 +110,7 @@ const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The first element; or NULL if container is empty.
      */
+    return self->count ? self->elements[0] : NULL;
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get_last(ccntr_man_array_t *self)
@@ -98,6 +122,7 @@ void* ccntr_man_array_get_last(ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The last element; or NULL if container is empty.
      */
+    return self->count ? self->elements[ self->count - 1 ] : NULL;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_last_c(const ccntr_man_array_t *self)
@@ -109,6 +134,7 @@ const void* ccntr_man_array_get_last_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The last element; or NULL if container is empty.
      */
+    return self->count ? self->elements[ self->count - 1 ] : NULL;
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get(ccntr_man_array_t *self, unsigned index)
@@ -121,6 +147,7 @@ void* ccntr_man_array_get(ccntr_man_array_t *self, unsigned index)
      * @param index Index of the element.
      * @return The element at the position; or NULL if the index is out of range.
      */
+    return index < self->count ? self->elements[index] : NULL;
 }
 //------------------------------------------------------------------------------
 const void* ccntr_man_array_get_c(const ccntr_man_array_t *self, unsigned index)
@@ -133,6 +160,24 @@ const void* ccntr_man_array_get_c(const ccntr_man_array_t *self, unsigned index)
      * @param index Index of the element.
      * @return The element at the position; or NULL if the index is out of range.
      */
+    return index < self->count ? self->elements[index] : NULL;
+}
+//------------------------------------------------------------------------------
+static
+void extend_array_buffer(ccntr_man_array_t *self)
+{
+    unsigned newcap = self->capacity ? self->capacity << 1 : 1;
+    assert( newcap > self->capacity );
+
+    size_t newsize = newcap * sizeof(self->elements[0]);
+    assert( newsize > newcap );
+
+    void **newbuf = realloc(self->elements, newsize);
+    if( !newbuf )
+        abort_message("ERROR: Cannot allocate more memory!\n");
+
+    self->elements = newbuf;
+    self->capacity = newcap;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_insert(ccntr_man_array_t *self, unsigned index, void *value)
@@ -147,6 +192,17 @@ void ccntr_man_array_insert(ccntr_man_array_t *self, unsigned index, void *value
      *              the value will be appended to the end of array.
      * @param value The value to be inserted.
      */
+    index = ( index <= self->count )?( index ):( self->count );
+
+    if( self->count == self->capacity )
+        extend_array_buffer(self);
+
+    for(unsigned i = self->count; i > index; --i)
+        self->elements[i] = self->elements[i-1];
+
+    self->elements[index] = value;
+
+    ++ self->count;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_insert_first(ccntr_man_array_t *self, void *value)
@@ -158,6 +214,7 @@ void ccntr_man_array_insert_first(ccntr_man_array_t *self, void *value)
      * @param self  Object instance.
      * @param value The value to be inserted.
      */
+    ccntr_man_array_insert(self, 0, value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_insert_last(ccntr_man_array_t *self, void *value)
@@ -169,6 +226,7 @@ void ccntr_man_array_insert_last(ccntr_man_array_t *self, void *value)
      * @param self  Object instance.
      * @param value The value to be inserted.
      */
+    ccntr_man_array_insert(self, self->count, value);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_replace(ccntr_man_array_t *self, unsigned index, void *value)
@@ -183,6 +241,16 @@ void ccntr_man_array_replace(ccntr_man_array_t *self, unsigned index, void *valu
      *              the value will be appended to the end of array.
      * @param value The value to be inserted.
      */
+    if( index >= self->count )
+    {
+        ccntr_man_array_insert_last(self, value);
+        return;
+    }
+
+    void *oldvalue = self->elements[index];
+    self->elements[index] = value;
+
+    self->release_value(oldvalue);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_erase(ccntr_man_array_t *self, unsigned index)
@@ -194,6 +262,14 @@ void ccntr_man_array_erase(ccntr_man_array_t *self, unsigned index)
      * @param self  Object instance.
      * @param index Index of the value.
      */
+    if( index >= self->count ) return;
+
+    self->release_value(self->elements[index]);
+
+    for(unsigned i = index + 1; i < self->count; ++i)
+        self->elements[i-1] = self->elements[i];
+
+    -- self->count;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_erase_first(ccntr_man_array_t *self)
@@ -204,6 +280,7 @@ void ccntr_man_array_erase_first(ccntr_man_array_t *self)
      *
      * @param self Object instance.
      */
+    ccntr_man_array_erase(self, 0);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_erase_last(ccntr_man_array_t *self)
@@ -214,6 +291,8 @@ void ccntr_man_array_erase_last(ccntr_man_array_t *self)
      *
      * @param self Object instance.
      */
+    if( self->count )
+        ccntr_man_array_erase(self, self->count - 1);
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_clear(ccntr_man_array_t *self)
@@ -224,6 +303,13 @@ void ccntr_man_array_clear(ccntr_man_array_t *self)
      *
      * @param self Object instance.
      */
+    for(unsigned i = 0; i < self->count; ++i)
+    {
+        void *value = self->elements[i];
+        self->release_value(value);
+    }
+
+    self->count = 0;
 }
 //------------------------------------------------------------------------------
 void ccntr_man_array_sort(ccntr_man_array_t *self)
@@ -237,6 +323,13 @@ void ccntr_man_array_sort(ccntr_man_array_t *self)
      * @remarks This function will have no effect if
      *          function compare_values is not set.
      */
+    if( self->compare )
+    {
+        qsort(self->elements,
+              self->count,
+              sizeof(self->elements[0]),
+              (int(*)(const void*,const void*)) self->compare);
+    }
 }
 //------------------------------------------------------------------------------
 

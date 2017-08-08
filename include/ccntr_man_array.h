@@ -34,7 +34,7 @@ typedef void(*ccntr_man_array_release_value_t)(void *value);
  * @retval 0  Values are equivalents.
  * @retval >0 Value @a val1 goes after value @a val2.
  */
-typedef int(*ccntr_man_array_compare_values_t)(const void *val1, const void *val2);
+typedef int(*ccntr_man_array_compare_values_t)(const void **val1, const void **val2);
 
 /**
  * @class ccntr_man_array_t
@@ -42,17 +42,24 @@ typedef int(*ccntr_man_array_compare_values_t)(const void *val1, const void *val
  */
 typedef struct ccntr_man_array_t
 {
+    void     **elements;
+    unsigned   capacity;
+    unsigned   count;
+
+    ccntr_man_array_compare_values_t compare;
+    ccntr_man_array_release_value_t  release_value;
+
 } ccntr_man_array_t;
 
-void ccntr_man_array_init(ccntr_man_array_t               *self,
-                          ccntr_man_array_compare_values_t compare,
-                          ccntr_man_array_release_value_t  release_value);
+void ccntr_man_array_init(ccntr_man_array_t                *self,
+                          ccntr_man_array_compare_values_t  compare,
+                          ccntr_man_array_release_value_t   release_value);
 void ccntr_man_array_destroy(ccntr_man_array_t *self);
 
 unsigned ccntr_man_array_get_count(const ccntr_man_array_t *self);
 
-void* ccntr_man_array_baseptr(ccntr_man_array_t *self);
-const void* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self);
+void** ccntr_man_array_baseptr(ccntr_man_array_t *self);
+const void** ccntr_man_array_baseptr_c(const ccntr_man_array_t *self);
 
 void* ccntr_man_array_get_first(ccntr_man_array_t *self);
 const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self);

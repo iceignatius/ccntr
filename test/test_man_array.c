@@ -27,12 +27,15 @@ void element_release(element_t *ele)
 }
 //------------------------------------------------------------------------------
 static
-int element_compare(const element_t *ele1, const element_t *ele2)
+int element_compare(const element_t **ele1, const element_t **ele2)
 {
-    return ele1->value - ele2->value;
+    return ele1[0]->value - ele2[0]->value;
 }
 //------------------------------------------------------------------------------
-CCNTR_DECLARE_ARRAY(array, element_t*, (int(*)(const void*,const void*)) element_compare, (void(*)(void*)) element_release)
+CCNTR_DECLARE_ARRAY(array,
+                    element_t*,
+                    (int(*)(const void**,const void**)) element_compare,
+                    (void(*)(void*)) element_release)
 //------------------------------------------------------------------------------
 #define compare_array(array, target) compare_array_ptr(array, target, sizeof(target)/sizeof(target[0]))
 static
@@ -262,6 +265,36 @@ void man_array_access_test(void **state)
     array_destroy(&array);
 }
 //------------------------------------------------------------------------------
+static
+void man_array_sort_test(void **state)
+{
+    array_t array;
+    array_init(&array);
+
+    {
+        array_insert_last(&array, element_create(2));
+        array_insert_last(&array, element_create(5));
+        array_insert_last(&array, element_create(1));
+        array_insert_last(&array, element_create(3));
+        array_insert_last(&array, element_create(8));
+        array_insert_last(&array, element_create(4));
+        array_insert_last(&array, element_create(6));
+        array_insert_last(&array, element_create(7));
+
+        int target[] = { 2, 5, 1, 3, 8, 4, 6, 7 };
+        assert_true( compare_array(&array, target) );
+    }
+
+    {
+        array_sort(&array);
+
+        int target[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        assert_true( compare_array(&array, target) );
+    }
+
+    array_destroy(&array);
+}
+//------------------------------------------------------------------------------
 int test_man_array(void)
 {
     struct CMUnitTest tests[] =
@@ -271,6 +304,7 @@ int test_man_array(void)
         cmocka_unit_test(man_array_erase_test),
         cmocka_unit_test(man_array_clear_test),
         cmocka_unit_test(man_array_access_test),
+        cmocka_unit_test(man_array_sort_test),
     };
 
     return cmocka_run_group_tests_name("managed array test", tests, NULL, NULL);
