@@ -59,7 +59,7 @@ void ccntr_man_array_destroy(ccntr_man_array_t *self);
 unsigned ccntr_man_array_get_count(const ccntr_man_array_t *self);
 
 void** ccntr_man_array_baseptr(ccntr_man_array_t *self);
-const void** ccntr_man_array_baseptr_c(const ccntr_man_array_t *self);
+void const* const* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self);
 
 void* ccntr_man_array_get_first(ccntr_man_array_t *self);
 const void* ccntr_man_array_get_first_c(const ccntr_man_array_t *self);

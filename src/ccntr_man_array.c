@@ -77,7 +77,7 @@ void** ccntr_man_array_baseptr(ccntr_man_array_t *self)
     return self->elements;
 }
 //------------------------------------------------------------------------------
-const void** ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
+void const* const* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
 {
     /**
      * @memberof ccntr_man_array_t
@@ -86,7 +86,7 @@ const void** ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
      * @param self Object instance.
      * @return The data array.
      */
-    return self->elements;
+    return (const void*) self->elements;
 }
 //------------------------------------------------------------------------------
 void* ccntr_man_array_get_first(ccntr_man_array_t *self)
