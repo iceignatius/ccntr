@@ -8,6 +8,7 @@
 #ifndef _CCNTR_MAN_ARRAY_H_
 #define _CCNTR_MAN_ARRAY_H_
 
+#include <stddef.h>
 #include "ccntr_spinlock.h"
 
 #ifdef __cplusplus
