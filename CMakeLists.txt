@@ -22,3 +22,5 @@ if(HAVE_CMOCKA)
     add_subdirectory(test)
     add_test(unit_tests ${CMAKE_BINARY_DIR}/test/ccntr_test)
 endif()
+
+install(FILES ${CMAKE_BINARY_DIR}/ccntr_config.h DESTINATION include/ccntr)
