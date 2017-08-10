@@ -25,3 +25,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 add_library(ccntr ${srcs})
+
+install(TARGETS ccntr DESTINATION lib)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include/ccntr)
