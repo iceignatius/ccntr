@@ -103,7 +103,7 @@ void const* const* ccntr_man_array_baseptr_c(const ccntr_man_array_t *self)
      *
      * @note This function is not thread safe!
      */
-    return (const void*) self->elements;
+    return (void const* const*)(const void*) self->elements;
 }
 
 static inline
