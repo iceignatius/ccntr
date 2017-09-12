@@ -9,6 +9,7 @@ if(NOT HAVE_CMOCKA)
     message(FATAL_ERROR "Test program depend on CMOCKA library!")
 endif()
 
+set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_cpp_compatible.cpp)
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_man_array.c)
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_list.c)
 set(srcs ${srcs} ${PROJECT_SOURCE_DIR}/test_man_list.c)
