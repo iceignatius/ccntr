@@ -4,6 +4,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(ccntr_library)
 
+set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_spinlock.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_array.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_list.c)
 set(srcs ${srcs} ${CMAKE_SOURCE_DIR}/src/ccntr_man_list.c)
