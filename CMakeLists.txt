@@ -8,7 +8,7 @@ include(CheckFunctionExists)
 check_function_exists(malloc CCNTR_HAVE_MALLOC)
 check_function_exists(free CCNTR_HAVE_FREE)
 
-option(CCNTR_THREAD_SAFE "Thread safe mode" OFF)
+option(CCNTR_THREAD_SAFE "Thread safe mode" ON)
 
 configure_file("${CMAKE_SOURCE_DIR}/ccntr_config.h.in"
                "${CMAKE_BINARY_DIR}/ccntr_config.h")
