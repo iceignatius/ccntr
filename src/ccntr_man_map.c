@@ -168,6 +168,78 @@ const void* ccntr_man_map_find_value_c(const ccntr_man_map_t *self, const void *
     return ele->value;
 }
 //------------------------------------------------------------------------------
+void* ccntr_man_map_find_value_nearest_less(ccntr_man_map_t *self,
+                                            const void      *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return The value if found; or NULL if not found.
+     */
+    node_t *node = ccntr_map_find_nearest_less(&self->super, key);
+    if( !node ) return NULL;
+
+    element_t *ele = container_of(node, element_t, node);
+    return ele->value;
+}
+//------------------------------------------------------------------------------
+const void* ccntr_man_map_find_value_nearest_less_c(const ccntr_man_map_t *self,
+                                                    const void            *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return The value if found; or NULL if not found.
+     */
+    const node_t *node = ccntr_map_find_nearest_less_c(&self->super, key);
+    if( !node ) return NULL;
+
+    const element_t *ele = container_of(node, element_t, node);
+    return ele->value;
+}
+//------------------------------------------------------------------------------
+void* ccntr_man_map_find_value_nearest_great(ccntr_man_map_t *self,
+                                             const void      *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return The value if found; or NULL if not found.
+     */
+    node_t *node = ccntr_map_find_nearest_great(&self->super, key);
+    if( !node ) return NULL;
+
+    element_t *ele = container_of(node, element_t, node);
+    return ele->value;
+}
+//------------------------------------------------------------------------------
+const void* ccntr_man_map_find_value_nearest_great_c(const ccntr_man_map_t *self,
+                                                     const void            *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to serch for the value.
+     * @return The value if found; or NULL if not found.
+     */
+    const node_t *node = ccntr_map_find_nearest_great_c(&self->super, key);
+    if( !node ) return NULL;
+
+    const element_t *ele = container_of(node, element_t, node);
+    return ele->value;
+}
+//------------------------------------------------------------------------------
 void ccntr_man_map_insert(ccntr_man_map_t *self, void *key, void *value)
 {
     /**

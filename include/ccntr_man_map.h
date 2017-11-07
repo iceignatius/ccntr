@@ -292,7 +292,7 @@ ccntr_man_map_iter_t ccntr_man_map_find(ccntr_man_map_t *self, const void *key)
      * @brief Find value by key.
      *
      * @param self Object instance.
-     * @param key  The key to be used to serch for the value.
+     * @param key  The key to be used to search for the value.
      * @return An iterator be pointed to the value if found;
      *         or an empty iterator if not found.
      */
@@ -310,7 +310,7 @@ ccntr_man_map_citer_t ccntr_man_map_find_c(const ccntr_man_map_t *self, const vo
      * @brief Find value by key.
      *
      * @param self Object instance.
-     * @param key  The key to be used to serch for the value.
+     * @param key  The key to be used to search for the value.
      * @return An iterator be pointed to the value if found;
      *         or an empty iterator if not found.
      */
@@ -322,6 +322,92 @@ ccntr_man_map_citer_t ccntr_man_map_find_c(const ccntr_man_map_t *self, const vo
 
 void* ccntr_man_map_find_value(ccntr_man_map_t *self, const void *key);
 const void* ccntr_man_map_find_value_c(const ccntr_man_map_t *self, const void *key);
+
+static inline
+ccntr_man_map_iter_t ccntr_man_map_find_nearest_less(ccntr_man_map_t *self,
+                                                     const void      *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to search for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_iter_t iter;
+    ccntr_man_map_iter_init(&iter, self, ccntr_map_find_nearest_less(&self->super, key));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_citer_t ccntr_man_map_find_nearest_less_c(const ccntr_man_map_t *self,
+                                                        const void            *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to search for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_citer_t iter;
+    ccntr_man_map_citer_init(&iter, self, ccntr_map_find_nearest_less_c(&self->super, key));
+
+    return iter;
+}
+
+void* ccntr_man_map_find_value_nearest_less(ccntr_man_map_t *self,
+                                            const void      *key);
+const void* ccntr_man_map_find_value_nearest_less_c(const ccntr_man_map_t *self,
+                                                    const void            *key);
+
+static inline
+ccntr_man_map_iter_t ccntr_man_map_find_nearest_great(ccntr_man_map_t *self,
+                                                      const void      *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to search for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_iter_t iter;
+    ccntr_man_map_iter_init(&iter, self, ccntr_map_find_nearest_great(&self->super, key));
+
+    return iter;
+}
+
+static inline
+ccntr_man_map_citer_t ccntr_man_map_find_nearest_great_c(const ccntr_man_map_t *self,
+                                                         const void            *key)
+{
+    /**
+     * @memberof ccntr_man_map_t
+     * @brief Find nearest value which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  The key to be used to search for the value.
+     * @return An iterator be pointed to the value if found;
+     *         or an empty iterator if not found.
+     */
+    ccntr_man_map_citer_t iter;
+    ccntr_man_map_citer_init(&iter, self, ccntr_map_find_nearest_great_c(&self->super, key));
+
+    return iter;
+}
+
+void* ccntr_man_map_find_value_nearest_great(ccntr_man_map_t *self,
+                                             const void      *key);
+const void* ccntr_man_map_find_value_nearest_great_c(const ccntr_man_map_t *self,
+                                                     const void            *key);
 
 void ccntr_man_map_insert(ccntr_man_map_t *self, void *key, void *value);
 void ccntr_man_map_erase(ccntr_man_map_t *self, ccntr_man_map_iter_t *pos);

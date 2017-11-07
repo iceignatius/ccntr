@@ -120,52 +120,6 @@ node_t* node_get_brother(node_t *node, node_t *parent)
     return ( parent->left == node )?( parent->right ):( parent->left );
 }
 //------------------------------------------------------------------------------
-//---- Node Search -------------------------------------------------------------
-//------------------------------------------------------------------------------
-static
-node_t* tree_find_closest(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
-{
-    node_t *node = root;
-    while( node )
-    {
-        int comp_res = compare(node->key, key);
-        if( comp_res < 0 )
-        {
-            if( !node->right ) break;
-            node = node->right;
-        }
-        else if( comp_res > 0 )
-        {
-            if( !node->left ) break;
-            node = node->left;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    return node;
-}
-//------------------------------------------------------------------------------
-static
-node_t* tree_find_match(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
-{
-    node_t *node = root;
-    while( node )
-    {
-        int comp_res = compare(node->key, key);
-        if( comp_res < 0 )
-            node = node->right;
-        else if( comp_res > 0 )
-            node = node->left;
-        else
-            break;
-    }
-
-    return node;
-}
-//------------------------------------------------------------------------------
 //---- Node Link ---------------------------------------------------------------
 //------------------------------------------------------------------------------
 static
@@ -556,6 +510,76 @@ node_t* node_get_next_postorder(node_t *node)
            ( parent );
 }
 //------------------------------------------------------------------------------
+//---- Node Search -------------------------------------------------------------
+//------------------------------------------------------------------------------
+static
+node_t* tree_find_closest(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
+{
+    node_t *node = root;
+    while( node )
+    {
+        int comp_res = compare(node->key, key);
+        if( comp_res < 0 )
+        {
+            if( !node->right ) break;
+            node = node->right;
+        }
+        else if( comp_res > 0 )
+        {
+            if( !node->left ) break;
+            node = node->left;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return node;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_find_match(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
+{
+    node_t *node = root;
+    while( node )
+    {
+        int comp_res = compare(node->key, key);
+        if( comp_res < 0 )
+            node = node->right;
+        else if( comp_res > 0 )
+            node = node->left;
+        else
+            break;
+    }
+
+    return node;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_find_nearest_less(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
+{
+    node_t *node = tree_find_closest(root, key, compare);
+    if( !node ) return NULL;
+
+    int comp_res = compare(node->key, key);
+    if( comp_res > 0 ) node = node_get_prev_inorder(node);
+
+    return node;
+}
+//------------------------------------------------------------------------------
+static
+node_t* tree_find_nearest_great(node_t *root, const void *key, ccntr_map_compare_keys_t compare)
+{
+    node_t *node = tree_find_closest(root, key, compare);
+    if( !node ) return NULL;
+
+    int comp_res = compare(node->key, key);
+    if( comp_res < 0 ) node = node_get_next_inorder(node);
+
+    return node;
+}
+//------------------------------------------------------------------------------
 //---- Container Iterator ------------------------------------------------------
 //------------------------------------------------------------------------------
 node_t* ccntr_map_node_get_next(node_t *self)
@@ -698,6 +722,40 @@ node_t* ccntr_map_find(ccntr_map_t *self, const void *key)
      */
     ccntr_spinlock_lock(&self->lock);
     ccntr_map_node_t *node = tree_find_match(self->root, key, self->compare);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
+}
+//------------------------------------------------------------------------------
+ccntr_map_node_t* ccntr_map_find_nearest_less(ccntr_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Find nearest node which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  Key of the node.
+     * @return The node if found; and NULL if not found.
+     */
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_find_nearest_less(self->root, key, self->compare);
+    ccntr_spinlock_unlock(&self->lock);
+
+    return node;
+}
+//------------------------------------------------------------------------------
+ccntr_map_node_t* ccntr_map_find_nearest_great(ccntr_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Find nearest node which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  Key of the node.
+     * @return The node if found; and NULL if not found.
+     */
+    ccntr_spinlock_lock(&self->lock);
+    ccntr_map_node_t *node = tree_find_nearest_great(self->root, key, self->compare);
     ccntr_spinlock_unlock(&self->lock);
 
     return node;

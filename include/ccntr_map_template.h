@@ -179,6 +179,70 @@ const valtype clsname##_find_value_c(const clsname##_t *self, const keytype key)
 }                                                                               \
                                                                                 \
 static inline                                                                   \
+clsname##_iter_t clsname##_find_nearest_less(clsname##_t   *self,               \
+                                             const keytype  key)                \
+{                                                                               \
+    return clsname##_iter_init(ccntr_man_map_find_nearest_less(&self->super,    \
+                                                               (const void*)key)); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+clsname##_citer_t clsname##_find_nearest_less_c(const clsname##_t *self,        \
+                                                const keytype      key)         \
+{                                                                               \
+    return clsname##_citer_init(ccntr_man_map_find_nearest_less_c(&self->super, \
+                                                                  (const void*)key)); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+valtype clsname##_find_value_nearest_less(clsname##_t   *self,                  \
+                                          const keytype  key)                   \
+{                                                                               \
+    return (valtype) ccntr_man_map_find_value_nearest_less(&self->super,        \
+                                                           (const void*)key);   \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+const valtype clsname##_find_value_nearest_less_c(const clsname##_t *self,      \
+                                                  const keytype      key)       \
+{                                                                               \
+    return (const valtype) ccntr_man_map_find_value_nearest_less_c(&self->super, \
+                                                                   (const void*)key); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+clsname##_iter_t clsname##_find_nearest_great(clsname##_t   *self,              \
+                                              const keytype  key)               \
+{                                                                               \
+    return clsname##_iter_init(ccntr_man_map_find_nearest_great(&self->super,   \
+                                                                (const void*)key)); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+clsname##_citer_t clsname##_find_nearest_great_c(const clsname##_t *self,       \
+                                                 const keytype      key)        \
+{                                                                               \
+    return clsname##_citer_init(ccntr_man_map_find_nearest_great_c(&self->super, \
+                                                                   (const void*)key)); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+valtype clsname##_find_value_nearest_great(clsname##_t   *self,                 \
+                                           const keytype  key)                  \
+{                                                                               \
+    return (valtype) ccntr_man_map_find_value_nearest_great(&self->super,       \
+                                                            (const void*)key);  \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
+const valtype clsname##_find_value_nearest_great_c(const clsname##_t *self,     \
+                                                   const keytype      key)      \
+{                                                                               \
+    return (const valtype) ccntr_man_map_find_value_nearest_great_c(&self->super, \
+                                                                    (const void*)key); \
+}                                                                               \
+                                                                                \
+static inline                                                                   \
 void clsname##_insert(clsname##_t *self, keytype key, valtype value)            \
 {                                                                               \
     ccntr_man_map_insert(&self->super, (void*)key, (void*)value);               \

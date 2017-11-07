@@ -288,6 +288,68 @@ void map_search_test(void **state)
 }
 //------------------------------------------------------------------------------
 static
+void map_search_nearest_test(void **state)
+{
+    // Build container base.
+
+    ccntr_map_t map;
+    ccntr_map_init(&map, compare_keys);
+
+    node_t *node_1 = node_create(1);
+    node_t *node_3 = node_create(3);
+    node_t *node_5 = node_create(5);
+    node_t *node_7 = node_create(7);
+    node_t *node_9 = node_create(9);
+
+    assert_null( ccntr_map_link(&map, node_1) );
+    assert_null( ccntr_map_link(&map, node_3) );
+    assert_null( ccntr_map_link(&map, node_5) );
+    assert_null( ccntr_map_link(&map, node_7) );
+    assert_null( ccntr_map_link(&map, node_9) );
+    assert_int_equal( ccntr_map_get_count(&map), 5 );
+
+    // Search for nearest less.
+
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  0), NULL );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  1), node_1 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  2), node_1 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  3), node_3 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  4), node_3 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  5), node_5 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  6), node_5 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  7), node_7 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  8), node_7 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t)  9), node_9 );
+    assert_ptr_equal( ccntr_map_find_nearest_less(&map, (void*)(intptr_t) 10), node_9 );
+
+    // Search for nearest great.
+
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  0), node_1 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  1), node_1 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  2), node_3 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  3), node_3 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  4), node_5 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  5), node_5 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  6), node_7 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  7), node_7 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  8), node_9 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t)  9), node_9 );
+    assert_ptr_equal( ccntr_map_find_nearest_great(&map, (void*)(intptr_t) 10), NULL );
+
+    // Clear.
+
+    for(ccntr_map_node_t *node = ccntr_map_get_first_postorder(&map); node;)
+    {
+        ccntr_map_node_t *node_del = node;
+        node = ccntr_map_node_get_next_postorder(node);
+
+        node_release(node_del);
+    }
+
+    ccntr_map_discard_all(&map);
+}
+//------------------------------------------------------------------------------
+static
 void map_duplicated_link_test(void **state)
 {
     // Build container base.
@@ -521,6 +583,7 @@ int test_map(void)
         cmocka_unit_test(map_unlink_test),
         cmocka_unit_test(map_unlink_by_key_test),
         cmocka_unit_test(map_search_test),
+        cmocka_unit_test(map_search_nearest_test),
         cmocka_unit_test(map_duplicated_link_test),
         cmocka_unit_test(map_rbtree_condition_test),
     };

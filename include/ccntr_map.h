@@ -172,6 +172,38 @@ const ccntr_map_node_t* ccntr_map_find_c(const ccntr_map_t *self, const void *ke
     return ccntr_map_find((ccntr_map_t*)self, key);
 }
 
+ccntr_map_node_t* ccntr_map_find_nearest_less(ccntr_map_t *self, const void *key);
+
+static inline
+const ccntr_map_node_t* ccntr_map_find_nearest_less_c(const ccntr_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Find nearest node which is less or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  Key of the node.
+     * @return The node if found; and NULL if not found.
+     */
+    return ccntr_map_find_nearest_less((ccntr_map_t*)self, key);
+}
+
+ccntr_map_node_t* ccntr_map_find_nearest_great(ccntr_map_t *self, const void *key);
+
+static inline
+const ccntr_map_node_t* ccntr_map_find_nearest_great_c(const ccntr_map_t *self, const void *key)
+{
+    /**
+     * @memberof ccntr_map_t
+     * @brief Find nearest node which is greater or equal than the specified key.
+     *
+     * @param self Object instance.
+     * @param key  Key of the node.
+     * @return The node if found; and NULL if not found.
+     */
+    return ccntr_map_find_nearest_great((ccntr_map_t*)self, key);
+}
+
 ccntr_map_node_t* ccntr_map_link(ccntr_map_t *self, ccntr_map_node_t *node);
 void ccntr_map_unlink(ccntr_map_t *self, ccntr_map_node_t *node);
 ccntr_map_node_t* ccntr_map_unlink_by_key(ccntr_map_t *self, const void *key);
